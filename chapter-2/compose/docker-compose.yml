@@ -33,26 +33,6 @@ services:
       - ./redis/conf/redis.conf:/home/jsh/redis/redis.conf
       - ./redis/data:/data
     command: redis-server /home/jsh/redis/redis.conf
-  jsh-nginx:
-    container_name: jsh-nginx
-    image: jsh-web:kit
-    ports:
-      - "82:80"
-    depends_on:
-      - jsh-boot
-  jsh-boot:
-    container_name: jsh-boot
-    image: jsh:kit
-    ports:
-      - "9999:9999"
-    environment:
-      - JARNAME=jshERP.jar
-      - DB_HOST=jsh-mysql
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWD=password
-      - REDIS_HOST=jsh-redis
-      - REDIS_PORT=6379
   jsh-web:
     container_name: jsh-web
     image: jsh-page:kit
