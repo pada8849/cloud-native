@@ -3,8 +3,8 @@ FROM kinshy-docker.pkg.coding.net/south/cross/node:lts-buster AS builder
 WORKDIR /app
 
 COPY ./code ./code
-COPY .yarnrc .yarnrc
 WORKDIR /app/code
+COPY .yarnrc .yarnrc
 RUN --mount=type=cache,target=/root/.yarn,id=yarn-cache,sharing=locked \
      YARN_CACHE_FOLDER=/root/.yarn yarn install
 
