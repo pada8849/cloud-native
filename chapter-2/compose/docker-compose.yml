@@ -38,7 +38,7 @@ services:
     build:
       context: ./web
     ports:
-      - "83:80"
+      - "80:80"
     depends_on:
       - jsh-boot
   jsh-api:
@@ -47,7 +47,7 @@ services:
     build:
       context: ./api
     ports:
-      - "9998:9999"
+      - "9999:9999"
     environment:
       - JARNAME=jshERP.jar
       - DB_HOST=jsh-mysql
