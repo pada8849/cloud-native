@@ -1,0 +1,156 @@
+version: '3'
+
+x-environment:
+  &default-env
+  PYTHON_NACOS_NAMESPACE: public
+  PYTHON_NACOS_ENV: dev
+  PYTHON_NACOS_DATAID: example-example-local
+  PYTHON_NACOS_GROUPID: PYTHON
+  PYTHON_NACOS_HOST: "113.3.33.3"
+  PYTHON_APM_SWITCH: "1"
+  PYTHON_APM_SERVER_URL:  "http://123.123.123.123/"
+  PYTHON_APM_SECRET_TOKEN: pass
+  PYTHON_APM_SERVICE_NAME: example-local
+  PYTHON_APM_ENVIRONMENT: local
+  _DEBUG: "true"
+  FLASK_APP: app.py
+x-avolumes:
+  &admin-volumes
+  - /data/share/project/example-admin-api:/webs
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-avolumes-1:
+  &user-volumes
+  - /data/share/project/example-user-api:/webs
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-acvolumes-0:
+  &adminsvc-volumes
+  - /data/share/project/example-service/example-admin-service:/webs/example-admin-service
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-acvolumes-1:
+  &authsvc-volumes
+  - /data/share/project/example-service/example-auth-service:/webs/example-auth-service
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-acvolumes-2:
+  &commonsvc-volumes
+  - /data/share/project/example-service/example-common-service:/webs/example-common-service
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-acvolumes-3:
+  &idssvc-volumes
+  - /data/share/project/example-service/example-ids-service:/webs/example-ids-service
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-acvolumes-4:
+  &examplesvc-volumes
+  - /data/share/project/example-service/example-example-service:/webs/example-example-service
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-acvolumes-5:
+  &dronessvc-volumes
+  - /data/share/project/example-service/example-drones-service:/webs/example-drones-service
+  - /data/share/project/example-trpc:/webs/example-trpc
+x-deploy:
+  &deploy-resource
+  resources:
+    limits:
+      cpus: '0.01'
+      memory: 200M
+    reservations:
+      cpus: '0.002'
+      memory: 50M
+services:
+  example-admin:
+    build:
+      context: ./
+      dockerfile: apiDockerfile
+      args:
+        CODE_DIR: example-admin-api
+        TRPC_DIR: example-trpc
+    ports:
+      - "5087:5000"
+    environment: *default-env
+    restart: always
+    volumes: *admin-volumes
+    deploy: *deploy-resource
+  example-user:
+    build:
+      context: ./
+      dockerfile: apiDockerfile
+      args:
+        CODE_DIR: example-user-api
+        TRPC_DIR: example-trpc
+    ports:
+      - "5088:5000"
+    environment: *default-env
+    restart: always
+    volumes: *user-volumes
+    deploy: *deploy-resource
+  example-admin-service:
+    build:
+      context: ./
+      dockerfile: svcDockerfile
+      args:
+        CODE_DIR: example-admin-service
+        TRPC_DIR: example-trpc
+        SVC_DIR: example-service
+    environment: *default-env
+    restart: always
+    volumes: *adminsvc-volumes
+    deploy: *deploy-resource
+  example-auth-service:
+    build:
+      context: ./
+      dockerfile: svcDockerfile
+      args:
+        CODE_DIR: example-auth-service
+        TRPC_DIR: example-trpc
+        SVC_DIR: example-service
+    environment: *default-env
+    restart: always
+    volumes: *authsvc-volumes
+    deploy: *deploy-resource
+  example-common-service:
+    build:
+      context: ./
+      dockerfile: svcCommonDockerfile
+      args:
+        CODE_DIR: example-common-service
+        TRPC_DIR: example-trpc
+        SVC_DIR: example-service
+    environment: *default-env
+    restart: always
+    volumes: *commonsvc-volumes
+    deploy: *deploy-resource
+  example-ids-service:
+    build:
+      context: ./
+      dockerfile: svcDockerfile
+      args:
+        CODE_DIR: example-ids-service
+        TRPC_DIR: example-trpc
+        SVC_DIR: example-service
+    environment: *default-env
+    restart: always
+    volumes: *idssvc-volumes
+    deploy: *deploy-resource
+  example-example-service:
+    build:
+      context: ./
+      dockerfile: svcDockerfile
+      args:
+        CODE_DIR: example-example-service
+        TRPC_DIR: example-trpc
+        SVC_DIR: example-service
+    environment: *default-env
+    restart: always
+    volumes: *examplesvc-volumes
+    deploy: *deploy-resource
+  example-drones-service:
+    build:
+      context: ./
+      dockerfile: svcDockerfile
+      args:
+        CODE_DIR: example-drones-service
+        TRPC_DIR: example-trpc
+        SVC_DIR: example-service
+    environment: *default-env
+    restart: always
+    volumes: *dronessvc-volumes
+    deploy: *deploy-resource
