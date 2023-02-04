@@ -83,7 +83,7 @@ sudo update-grub
 ### 转换并构建推送镜像
 ##### 确认要使用的目标镜像仓库（云端或者私有）示例以 
     docker run -d -p 5000:5000 --restart=always --name registry registry:2 #为镜像仓库
-##### 修改chapter-2/compose的 docker-compose.yml 批量将 image: 替换为 image: [镜像仓库机器ip]:5000/jsh/
+##### 修改chapter-2/compose的 docker-compose.yml 批量将 image: 替换为 image: <仓库主机>:5000/jsh/
 ##### 执行 docker-compose build 构建目标镜像
 ##### 批量推送 
     nohup docker images | grep "5000/jsh" |awk '{print "docker push"" "$1":"$2}'  |sh > push.log &
@@ -102,9 +102,9 @@ sudo update-grub
     vim /etc/rancher/rke2/registries.yaml
     #格式如下
     mirrors:
-      "[10.0.1.104]:5000":
+      "<仓库主机>:5000":
         endpoint:
-          - "http://[10.0.1.104]:5000"
+          - "http://<仓库主机>:5000"
 ##### 执行kubectl apply -f . 按注意事项2中的方式处理 mysql 报错问题
 ##### 通过 kubectl get svc 查看jsh-web 的NodePort 端口并进行访问验证
 ##### 如需要删除执行 kubectl delete -f .
