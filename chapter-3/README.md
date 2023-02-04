@@ -105,6 +105,7 @@ sudo update-grub
       "<仓库主机>:5000":
         endpoint:
           - "http://<仓库主机>:5000"
+    service rke2-agent restart #重启生效
 ##### 执行kubectl apply -f . 按注意事项2中的方式处理 mysql 报错问题
 ##### 通过 kubectl get svc 查看jsh-web 的NodePort 端口并进行访问验证
 ##### 如需要删除执行 kubectl delete -f .
