@@ -1,0 +1,59 @@
+version : '3'
+services:
+  jsh-mysql:
+    container_name: jsh-mysql
+    image: 10.0.1.104:5000/jsh/jsh-mysql
+    build:
+      context: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    command: [
+      'mysqld',
+      '--innodb-buffer-pool-size=80M',
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci',
+      '--default-time-zone=+8:00',
+      '--lower-case-table-names=1'
+    ]
+    environment:
+      MYSQL_DATABASE: 'jsh'
+      MYSQL_ROOT_PASSWORD: password
+  jsh-redis:
+    container_name: jsh-redis
+    image: 10.0.1.104:5000/jsh/jsh-redis
+    build:
+      context: ./redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/data:/data
+    command: redis-server /home/jsh/redis/redis.conf
+  jsh-web:
+    container_name: jsh-web
+    image: 10.0.1.104:5000/jsh/jsh-page:kit
+    build:
+      context: ./web
+    ports:
+      - "80:80"
+    depends_on:
+      - jsh-boot
+  jsh-api:
+    container_name: jsh-api
+    image: 10.0.1.104:5000/jsh/jsh-api:kit
+    build:
+      context: ./api
+    ports:
+      - "9999:9999"
+    environment:
+      - JARNAME=jshERP.jar
+      - DB_HOST=jsh-mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWD=password
+      - REDIS_HOST=jsh-redis
+      - REDIS_PORT=6379
+networks:
+  jsh:
+    external: false
