@@ -82,22 +82,29 @@ sudo update-grub
 ##### 
 ### 转换并构建推送镜像
 ##### 确认要使用的目标镜像仓库（云端或者私有）示例以 
-`docker run -d -p 5000:5000 --restart=always --name registry registry:2` 为镜像仓库
+    docker run -d -p 5000:5000 --restart=always --name registry registry:2 #为镜像仓库
 ##### 修改chapter-2/compose的 docker-compose.yml 批量将 image: 替换为 image: [镜像仓库机器ip]:5000/jsh/
 ##### 执行 docker-compose build 构建目标镜像
 ##### 批量推送 
-`nohup docker images | grep "5000/jsh" |awk '{print "docker push"" "$1":"$2}'  |sh > push.log &`
+    nohup docker images | grep "5000/jsh" |awk '{print "docker push"" "$1":"$2}'  |sh > push.log &
 <br></br>
 ### 安装 kompose并转换 k8s部署yaml
 ##### 安装kompose
-`curl -L https://github.com/kubernetes/kompose/releases/download/v1.21.0/kompose-linux-amd64 -o kompose
-&& chmod +x kompose
-&& mv ./kompose /usr/local/bin/kompose`
+    curl -L https://github.com/kubernetes/kompose/releases/download/v1.21.0/kompose-linux-amd64 -o kompose
+    && chmod +x kompose
+    && mv ./kompose /usr/local/bin/kompose
 ##### 将 docker-compose.yml 复制到 chapter-3/k8s/kompose
 ##### 对docker-compose.yml 进行部分修改，主要目的减少 pvc 的数量，参考版本中的文件
 ##### 执行 kompose convert
 ##### 修改生成的 pvc 文件中容量大小 如redis 10Gi mysql 20Gi
 ##### 修改生成的 jsh-web-service.yaml 文件的 spec 下添加 type: NodePort
+##### 编辑rke2 node上的registry 私有仓库
+    vim /etc/rancher/rke2/registries.yaml
+    #格式如下
+    mirrors:
+      "[10.0.1.104]:5000":
+        endpoint:
+          - "http://[10.0.1.104]:5000"
 ##### 执行kubectl apply -f . 按注意事项2中的方式处理 mysql 报错问题
 ##### 通过 kubectl get svc 查看jsh-web 的NodePort 端口并进行访问验证
 ##### 如需要删除执行 kubectl delete -f .
