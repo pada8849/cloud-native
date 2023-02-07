@@ -44,6 +44,13 @@ spec:
         container('jnlp'){
             script {
                 sh 'pwd && ls'
+                dir ("${workdir}") {
+                    def repositoryUrl = scm.userRemoteConfigs[0].url
+                    sh "git init"
+                    sh "git remote add origin ${repositoryUrl}"
+                    sh "git checkout -b master"
+                    sh "git pull origin master"
+                }
             }
         }
         build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
