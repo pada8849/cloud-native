@@ -42,7 +42,7 @@ pipeline {
               def workdir = pwd();
               def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
               dir ("${workdir}"){
-                      sh "ls && pwd"
+                      sh "ls && pwd && which mvn"
                       sh "cd chapter-3/cicd/ci/api/code && git init &&  \
                       git remote add origin https://gitee.com/jishenghua/JSH_ERP.git &&  \
                       git config core.sparsecheckout true && \
@@ -52,11 +52,11 @@ pipeline {
                       cp -af settings.xml code && ls && \
                       cp -af application.yml code/src/main/resources/application.yml \
                       && rm -f code/src/main/resources/application.properties && \
-                      cd code && ls && sleep 300 "
+                      cd code && ls && sleep 600 "
               }
             }
             sh "cd chapter-3/cicd/ci/api/code"
-            sh "mvn clean"
+            mvn clean
             sh "mvn -s settings.xml -e -B package"
             sh "cd chapter-3/cicd/ci/api && ./copy.sh"
             }
