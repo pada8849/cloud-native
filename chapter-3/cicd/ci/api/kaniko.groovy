@@ -1,7 +1,4 @@
 podTemplate(
-        label: 'kaniko',
-        serviceAccount: "your service account",
-        namespace: "your jenkins namespace",
         yaml: """
 kind: Pod
 metadata:
@@ -38,26 +35,45 @@ spec:
         claimName: jenkins-pvc
 """
 ) {
-    node('kaniko')  {
+    node(POD_LABEL)  {
+        workdir="/home/jenkins/workdir"
+        imageurl="192.168.11.14:5000"
         container('maven') {
             def workdir = pwd();
             def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-            dir ("${workdir}"){
-                sh "ls && pwd"
-                sh "cd chapter-3/cicd/ci/api/code && git init &&  \
-                          git remote add origin https://gitee.com/jishenghua/JSH_ERP.git &&  \
-                          git config core.sparsecheckout true && \
-                          echo 'jshERP-boot' >> .git/info/sparse-checkout && ls && \
-                          git pull --depth 1 origin master && \
-                          mv jshERP-boot/* . && cd .. && ls && \
-                          cp -af settings.xml code && ls && \
-                          cp -af application.yml code/src/main/resources/application.yml \
-                          && rm -f code/src/main/resources/application.properties && \
-                          cd code && ls "
-                sh "cd chapter-3/cicd/ci/api/code && \
-                          mvn clean -s settings.xml && \
-                          mvn -s settings.xml -e -B package"
-                sh "cd chapter-3/cicd/ci/api && chmod +x copy.sh && ./copy.sh"
+            script {
+                if (!fileExists("${workdir}")) {
+                    sh "mkdir -p ${workdir}"
+                    dir ("${workdir}") {
+                        def repositoryUrl = scm.userRemoteConfigs[0].url
+                        sh "git init"
+                        sh "git remote add origin ${repositoryUrl}"
+                        sh "git checkout -b master"
+                        sh "git pull origin master"
+                    }
+                } else {
+                    dir ("${workdir}") {
+                        sh "git pull origin master"
+                    }
+                }
+
+                dir ("${workdir}"){
+                    sh "ls && pwd"
+                    sh "cd chapter-3/cicd/ci/api/code && git init &&  \
+                              git remote add origin https://gitee.com/jishenghua/JSH_ERP.git &&  \
+                              git config core.sparsecheckout true && \
+                              echo 'jshERP-boot' >> .git/info/sparse-checkout && ls && \
+                              git pull --depth 1 origin master && \
+                              mv jshERP-boot/* . && cd .. && ls && \
+                              cp -af settings.xml code && ls && \
+                              cp -af application.yml code/src/main/resources/application.yml \
+                              && rm -f code/src/main/resources/application.properties && \
+                              cd code && ls "
+                    sh "cd chapter-3/cicd/ci/api/code && \
+                              mvn clean -s settings.xml && \
+                              mvn -s settings.xml -e -B package"
+                    sh "cd chapter-3/cicd/ci/api && chmod +x copy.sh && ./copy.sh"
+                }
             }
         }
         container('kaniko') {

@@ -11,3 +11,12 @@
     通过http://<节点 ip:以上端口号>/manage/pluginManager/updates/ 访问插件更新中心，使用上一步获取的密码，更新对应插件
 ### 安装 flux
     curl -s https://fluxcd.io/install.sh | sudo bash 
+    export GITHUB_TOKEN=<your-token> # 从github 上获取 token
+    export GITHUB_USER=<your-username>
+    flux check --pre 检查集群
+    flux bootstrap github \
+      --owner=$GITHUB_USER \
+      --repository=fleet-infra \
+      --branch=main \
+      --path=./clusters/my-cluster \
+      --personal
