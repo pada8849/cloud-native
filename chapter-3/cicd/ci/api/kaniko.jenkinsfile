@@ -38,8 +38,7 @@ pipeline {
               }
             }
             steps {
-            sh "which mvn"
-            sh "mvn"
+            mvn clean
             script {
               def workdir = pwd();
               def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
