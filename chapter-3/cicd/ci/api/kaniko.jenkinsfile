@@ -48,8 +48,8 @@ pipeline {
                       git config core.sparsecheckout true && \
                       echo 'jshERP-boot' >> .git/info/sparse-checkout && ls && \
                       git pull --depth 1 origin master && \
-                      mv jshERP-boot/* . && cd .. && ls "
-                      sh "cp -af settings.xml code && ls && \
+                      mv jshERP-boot/* . && cd .. && ls && \
+                      cp -af settings.xml code && ls && \
                       cp -af application.yml code/src/main/resources/application.yml \
                       && rm -f code/src/main/resources/application.properties && \
                       cd code && ls && sleep 30 && mvn clean && mvn -s settings.xml -e -B package && \
