@@ -20,7 +20,7 @@ pipeline {
                       jenkins: agent
                   spec:
                     containers:
-                    - name: jnlp
+                    - name: mvn
                       args:
                       - tail
                       - -f
