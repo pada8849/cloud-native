@@ -29,7 +29,7 @@ pipeline {
                       volumeMounts:
                         - mountPath: /app/jar
                           name: jenkins-jar
-                        - mountPath: /root/.m2
+                        - mountPath: /tmp/.m2
                           name: jenkins-cache
                     volumes:
                     - name: jenkins-jar
@@ -58,10 +58,9 @@ pipeline {
                       && rm -f code/src/main/resources/application.properties && \
                       cd code && ls "
                       sh "cd chapter-3/cicd/ci/api/code && \
-                      chmod 777 -R /root && \
                       mvn clean -s settings.xml && \
                       mvn -s settings.xml -e -B package"
-                      sh "cd chapter-3/cicd/ci/api && ./copy.sh"
+                      sh "cd chapter-3/cicd/ci/api && chmod +x copy.sh && ./copy.sh"
               }
             }
 
