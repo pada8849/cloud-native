@@ -70,7 +70,7 @@ spec:
             }
         }
         container('kaniko') {
-            sh 'cp -af /app/*.jar .'
+            sh 'cp -af /app/jar/*.jar .'
             sh '/kaniko/executor -f Dockerfile -c . --destination=your_registry/your_repo:build_tag'
         }
     }
