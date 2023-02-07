@@ -44,9 +44,8 @@ spec:
     node(POD_LABEL)  {
         workdir="/home/jenkins/workdir"
         imageurl="192.168.11.14:5000"
+        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         container('maven') {
-            def workdir = pwd();
-            def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
             script {
                 if (!fileExists("${workdir}")) {
                     sh "mkdir -p ${workdir}"
