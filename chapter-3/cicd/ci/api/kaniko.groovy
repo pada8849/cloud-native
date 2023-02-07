@@ -12,7 +12,7 @@ spec:
     - cat
     tty: true
     volumeMounts:
-      - name: jenkins-home
+      - name: workspace-volume
         mountPath: /home/jenkins/agent
       - mountPath: /app/jar
         name: jenkins-jar
