@@ -38,11 +38,13 @@ pipeline {
               }
             }
             steps {
+            sh "which mvn"
+            sh "mvn"
             script {
               def workdir = pwd();
               def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
               dir ("${workdir}"){
-                      sh "ls && pwd && which mvn"
+                      sh "ls && pwd"
                       sh "cd chapter-3/cicd/ci/api/code && git init &&  \
                       git remote add origin https://gitee.com/jishenghua/JSH_ERP.git &&  \
                       git config core.sparsecheckout true && \
