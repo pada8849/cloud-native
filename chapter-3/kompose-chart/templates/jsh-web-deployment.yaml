@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c
+    kompose.version: 1.21.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: jsh-web
+  name: jsh-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jsh-web
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c
+        kompose.version: 1.21.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.service: jsh-web
+    spec:
+      containers:
+      - image: 10.0.1.104:5000/jsh/jsh-page:kit
+        imagePullPolicy: ""
+        name: jsh-web
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
