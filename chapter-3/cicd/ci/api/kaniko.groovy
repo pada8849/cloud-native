@@ -13,7 +13,7 @@ spec:
     tty: true
     volumeMounts:
       - name: jenkins-home
-        mountPath: /home/jenkins
+        mountPath: /home/jenkins/agent
       - mountPath: /app/jar
         name: jenkins-jar
   - name: maven
@@ -23,16 +23,13 @@ spec:
     - cat
     tty: true
     volumeMounts:
-      - name: jenkins-home
-        mountPath: /home/jenkins
+      - name: workspace-volume
+        mountPath: /home/jenkins/agent
       - mountPath: /app/jar
         name: jenkins-jar
       - mountPath: /tmp/.m2
         name: jenkins-cache
   volumes:
-    - name: jenkins-home
-      persistentVolumeClaim:
-        claimName: jenkins-pvc
     - name: jenkins-jar
       persistentVolumeClaim:
         claimName: jenkins-jar
@@ -42,10 +39,9 @@ spec:
 """
 ) {
     node(POD_LABEL)  {
-        workdir="/home/jenkins/workdir"
+        workdir="/home/jenkins/agent"
         imageurl="192.168.11.14:5000"
-        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-        container('maven') {
+        container('jnlp'){
             script {
                 if (!fileExists("${workdir}")) {
                     sh "mkdir -p ${workdir}"
@@ -61,7 +57,11 @@ spec:
                         sh "git pull origin master"
                     }
                 }
-
+            }
+        }
+        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+        container('maven') {
+            script {
                 dir ("${workdir}"){
                     sh "ls && pwd"
                     sh "cd chapter-3/cicd/ci/api/code && git init &&  \
