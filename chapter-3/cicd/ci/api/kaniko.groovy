@@ -43,6 +43,7 @@ spec:
         imageurl="192.168.11.14:5000"
         container('jnlp'){
             script {
+                sh 'pwd && ls'
                 if (!fileExists("${workdir}")) {
                     sh "mkdir -p ${workdir}"
                     dir ("${workdir}") {
