@@ -38,16 +38,16 @@ pipeline {
                 def workdir = pwd();
                 def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
                   dir ("${workdir}"){
-                      sh "cd code && git init && \
-                      git remote add origin https://gitee.com/jishenghua/JSH_ERP.git && \
+                      sh "cd code && git init && pwd && \
+                      git remote add origin https://gitee.com/jishenghua/JSH_ERP.git && ls && \
                       git config core.sparsecheckout true && \
-                      echo 'jshERP-boot' >> .git/info/sparse-checkout && \
+                      echo 'jshERP-boot' >> .git/info/sparse-checkout && ls && \
                       git pull --depth 1 origin master && \
-                      mv jshERP-boot/* . && cd .."
-                      sh "cp -af settings.xml code && \
+                      mv jshERP-boot/* . && cd .. && ls "
+                      sh "cp -af settings.xml code && ls && \
                       cp -af application.yml code/src/main/resources/application.yml \
                       && rm -f code/src/main/resources/application.properties && \
-                      cd code && mvn clean && mvn -s settings.xml -e -B package && \
+                      cd code && ls && sleep 30 && mvn clean && mvn -s settings.xml -e -B package && \
                       cd .. && ./copy.sh"
                   }
               }
