@@ -38,7 +38,7 @@ spec:
         claimName: jenkins-pvc
 """
 ) {
-    node(label)  {
+    node('kaniko')  {
         container('maven') {
             def workdir = pwd();
             def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
