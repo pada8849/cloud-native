@@ -8,6 +8,9 @@ pipeline {
           stage('buildJava') {
             agent {
               kubernetes {
+                tools {
+                  maven 'mvn-3.6.3'
+                }
                  yaml '''\
                   apiVersion: v1
                   kind: Pod
