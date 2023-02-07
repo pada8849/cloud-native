@@ -1,0 +1,59 @@
+localIP="192.168.11.14"
+imageurl="kinshy-docker.pkg.coding.net/south/do"
+pipeline {
+    agent any;
+    stages{
+      stage ('并行任务'){
+        parallel {
+          stage('buildJava') {
+            agent {
+              kubernetes {
+                 yaml '''\
+                  apiVersion: v1
+                  kind: Pod
+                  metadata:
+                    labels:
+                      jenkins: agent
+                  spec:
+                    containers:
+                    - name: jnlp
+                      image: kinshy-docker.pkg.coding.net/south/cross/jenkins-agent:maven-3.6.3
+                      volumeMounts:
+                        - mountPath: /app/jar
+                          name: jenkins-jar
+                        - mountPath: /root/.m2
+                          name: jenkins-cache
+                    volumes:
+                    - name: jenkins-jar
+                      persistentVolumeClaim:
+                        claimName: jenkins-jar
+                    - name: jenkins-cache
+                      persistentVolumeClaim:
+                        claimName: jenkins-cache
+                  '''.stripIndent()
+              }
+            }
+            steps {
+              script {
+                def workdir = pwd();
+                def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                  dir ("${workdir}"){
+                      sh "cd code && git init && \
+                      git remote add origin https://gitee.com/jishenghua/JSH_ERP.git && \
+                      git config core.sparsecheckout true && \
+                      echo 'jshERP-boot' >> .git/info/sparse-checkout && \
+                      git pull --depth 1 origin master && \
+                      mv jshERP-boot/* . && cd .."
+                      sh "cp -af settings.xml code && \
+                      cp -af application.yml code/src/main/resources/application.yml \
+                      && rm -f code/src/main/resources/application.properties && \
+                      cd code && mvn clean && mvn -s settings.xml -e -B package && \
+                      cd .. && ./copy.sh"
+                  }
+              }
+            }
+          }
+        }
+      }
+    }
+}
