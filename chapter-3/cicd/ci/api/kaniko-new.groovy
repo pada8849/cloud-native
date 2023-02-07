@@ -5,6 +5,8 @@ metadata:
   name: kaniko
 spec:
   containers:
+  - name: mltp
+    image: kili-docker.pkg.coding.net/ebes/ot/inbound-agent:3077.vd69cf116da_6f-3-jdk11
   - name: kaniko
     image: kili-docker.pkg.coding.net/ebes/ot/executor:debug
     imagePullPolicy: Always
