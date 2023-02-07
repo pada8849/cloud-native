@@ -17,7 +17,7 @@ pipeline {
                   spec:
                     containers:
                     - name: mvn
-                      image: kinshy-docker.pkg.coding.net/south/cross/jenkins-agent:maven-3.6.3
+                      image: kinshy-docker.pkg.coding.net/south/cross/maven:3.6-jdk-8-alpine
                       volumeMounts:
                         - mountPath: /app/jar
                           name: jenkins-jar
