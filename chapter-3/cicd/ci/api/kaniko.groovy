@@ -33,6 +33,12 @@ spec:
     - name: jenkins-home
       persistentVolumeClaim:
         claimName: jenkins-pvc
+    - name: jenkins-jar
+      persistentVolumeClaim:
+        claimName: jenkins-jar
+    - name: jenkins-cache
+      persistentVolumeClaim:
+        claimName: jenkins-cache
 """
 ) {
     node(POD_LABEL)  {
