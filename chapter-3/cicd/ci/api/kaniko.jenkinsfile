@@ -20,12 +20,8 @@ pipeline {
                       jenkins: agent
                   spec:
                     containers:
-                    - name: mvn
-                      args:
-                      - tail
-                      - -f
-                      - /dev/null
-                      image: kinshy-docker.pkg.coding.net/south/cross/maven:3.6-jdk-8-alpine
+                    - name: jnlp
+                      image: 10.0.1.125:5000/library/inbound-agent:3077.vd69cf116da_6f-3-jdk11
                       volumeMounts:
                         - mountPath: /app/jar
                           name: jenkins-jar
