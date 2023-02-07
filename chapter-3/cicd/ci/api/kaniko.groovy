@@ -44,19 +44,12 @@ spec:
         container('jnlp'){
             script {
                 sh 'pwd && ls'
-                if (!fileExists("${workdir}")) {
-                    sh "mkdir -p ${workdir}"
-                    dir ("${workdir}") {
-                        def repositoryUrl = scm.userRemoteConfigs[0].url
-                        sh "git init"
-                        sh "git remote add origin ${repositoryUrl}"
-                        sh "git checkout -b master"
-                        sh "git pull origin master"
-                    }
-                } else {
-                    dir ("${workdir}") {
-                        sh "git pull origin master"
-                    }
+                dir ("${workdir}") {
+                    def repositoryUrl = scm.userRemoteConfigs[0].url
+                    sh "git init"
+                    sh "git remote add origin ${repositoryUrl}"
+                    sh "git checkout -b master"
+                    sh "git pull origin master"
                 }
             }
         }
