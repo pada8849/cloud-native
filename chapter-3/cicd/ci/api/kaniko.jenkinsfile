@@ -55,10 +55,11 @@ pipeline {
                       cd code && ls && sleep 300 "
                       cd chapter-3/cicd/ci/api/code
                       mvn clean
-                      mvn -s settings.xml -e -B package
+                      sh "mvn -s settings.xml -e -B package"
                       sh "cd chapter-3/cicd/ci/api && ./copy.sh"
                   }
               }
+
             }
           }
         }
