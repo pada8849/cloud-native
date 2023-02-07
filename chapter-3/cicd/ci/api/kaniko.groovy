@@ -39,7 +39,7 @@ spec:
 """
 ) {
     node(POD_LABEL)  {
-        workdir="/home/jenkins/agent"
+        workdir="/home/jenkins/agent/workspace/kaniko"
         imageurl="192.168.11.14:5000"
         container('jnlp'){
             script {
