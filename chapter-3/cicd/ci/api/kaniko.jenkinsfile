@@ -3,7 +3,7 @@ imageurl="kinshy-docker.pkg.coding.net/south/do"
 pipeline {
     agent any;
     tools {
-      maven 'mvn-3.6.3'
+      maven 'maven-3.6.3'
     }
     stages{
       stage ('并行任务'){
