@@ -42,8 +42,9 @@ pipeline {
                 def workdir = pwd();
                 def build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
                   dir ("${workdir}"){
-                      sh "cd code && git init && pwd && \
-                      git remote add origin https://gitee.com/jishenghua/JSH_ERP.git && ls && \
+                      sh "ls && pwd"
+                      sh "cd code && git init &&  \
+                      git remote add origin https://gitee.com/jishenghua/JSH_ERP.git &&  \
                       git config core.sparsecheckout true && \
                       echo 'jshERP-boot' >> .git/info/sparse-checkout && ls && \
                       git pull --depth 1 origin master && \
