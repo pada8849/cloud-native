@@ -52,8 +52,11 @@ pipeline {
                       cp -af settings.xml code && ls && \
                       cp -af application.yml code/src/main/resources/application.yml \
                       && rm -f code/src/main/resources/application.properties && \
-                      cd code && ls && sleep 300 && mvn clean && mvn -s settings.xml -e -B package && \
-                      cd .. && ./copy.sh"
+                      cd code && ls && sleep 300 "
+                      cd chapter-3/cicd/ci/api/code
+                      mvn clean
+                      mvn -s settings.xml -e -B package
+                      sh "cd chapter-3/cicd/ci/api && ./copy.sh"
                   }
               }
             }
