@@ -1,5 +1,5 @@
 podTemplate(
-        label: label,
+        label: 'kaniko',
         serviceAccount: "your service account",
         namespace: "your jenkins namespace",
         yaml: """
