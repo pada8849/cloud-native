@@ -2,15 +2,16 @@ localIP="192.168.11.14"
 imageurl="kinshy-docker.pkg.coding.net/south/do"
 pipeline {
     agent any;
+    tools {
+      maven 'mvn-3.6.3'
+    }
     stages{
       stage ('并行任务'){
         parallel {
           stage('buildJava') {
             agent {
               kubernetes {
-                tools {
-                  maven 'mvn-3.6.3'
-                }
+
                  yaml '''\
                   apiVersion: v1
                   kind: Pod
