@@ -1,6 +1,3 @@
 .git
 .idea
-jshERP-web
-docker
-logs*
-**._.DS_Store
+code/

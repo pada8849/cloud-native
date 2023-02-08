@@ -72,7 +72,7 @@ spec:
         container('kaniko') {
             dir ("${workdir}") {
                 sh 'cp -af /app/jar/*.jar .'
-                sh "/kaniko/executor -f Dockerfile -c . --destination=${imageurl}/api:${build_tag}"
+                sh "executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
             }
         }
     }
