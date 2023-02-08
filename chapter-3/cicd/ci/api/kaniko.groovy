@@ -6,14 +6,14 @@ metadata:
 spec:
   containers:
   - name: jnlp
-    image: ${REGISTRY-URL}/library/inbound-agent-kubectl:latest
+    image: ${REGISTRY}/library/inbound-agent-kubectl:latest
     volumeMounts:
       - name: workspace-volume
         mountPath: /home/jenkins/agent    
       - name: kube-config
         mountPath: /tmp/kube    
   - name: kaniko
-    image: ${REGISTRY-URL}/library/executor:debug
+    image: ${REGISTRY}/library/executor:debug
     imagePullPolicy: Always
     command:
     - cat
@@ -24,7 +24,7 @@ spec:
       - mountPath: /app/jar
         name: jenkins-jar
   - name: maven
-    image: ${REGISTRY-URL}/library/maven:3.6-jdk-8-alpine
+    image: ${REGISTRY}/library/maven:3.6-jdk-8-alpine
     imagePullPolicy: Always
     command:
     - cat
@@ -52,7 +52,7 @@ spec:
         workdir="${WORKSPACE}"
         cidir="${workdir}/chapter-3/cicd/ci/api"
         cddir="${workdir}/chapter-3/cicd/cd"
-        imageurl="${REGISTRY-URL}/library"
+        imageurl="${REGISTRY}/library"
         kubeconfig="/tmp/kube/config"
         container('jnlp'){
             script {
