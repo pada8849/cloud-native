@@ -70,7 +70,7 @@ spec:
         container('kaniko') {
             dir ("${workdir}") {
                 sh 'cd chapter-3/cicd/ci/api && cp -af /app/jar/*.jar .'
-                sh "cd chapter-3/cicd/ci/api && executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+                sh "cd chapter-3/cicd/ci/api && ls && pwd && executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
             }
         }
     }
