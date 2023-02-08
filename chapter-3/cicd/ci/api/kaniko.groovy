@@ -54,7 +54,6 @@ spec:
         cddir="${workdir}/chapter-3/cicd/cd"
         imageurl="${REGISTRY}/library"
         kubeconfig="/tmp/kube/config"
-        stages {
             stage('检出代码') {
                 container('jnlp') {
                     script {
@@ -101,7 +100,6 @@ spec:
                     }
                 }
             }
-        }
     }
     }
 
