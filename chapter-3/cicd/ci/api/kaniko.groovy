@@ -5,6 +5,13 @@ metadata:
   name: kaniko
 spec:
   containers:
+  - name: nltp
+    image: 10.0.1.125:5000/library/inbound-agent:3077.vd69cf116da_6f-3-jdk11
+    volumeMounts:
+      - name: workspace-volume
+        mountPath: /home/jenkins/agent    
+      - name: kube-config
+        mountPath: /tmp/kube    
   - name: kaniko
     image: 10.0.1.125:5000/library/executor:debug
     imagePullPolicy: Always
@@ -36,14 +43,17 @@ spec:
     - name: jenkins-cache
       persistentVolumeClaim:
         claimName: jenkins-cache
+    - name: kube-config
+      configMap:
+        name: kube
 """
 ) {
     node(POD_LABEL)  {
         workdir="/home/jenkins/agent/workspace/kaniko"
         imageurl="10.0.1.125:5000/library"
+        kubeconfig="/tmp/kube/config"
         container('jnlp'){
             script {
-                sh 'pwd && ls'
                 dir ("${workdir}") {
                     def repositoryUrl = scm.userRemoteConfigs[0].url
                     sh "git init"
@@ -71,6 +81,17 @@ spec:
             dir ("${workdir}") {
                 sh 'cd chapter-3/cicd/ci/api && cp -af /app/jar/*.jar .'
                 sh "cd chapter-3/cicd/ci/api && ls && pwd && executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+            }
+        }
+        container('jnlp'){
+            script {
+                dir ("${workdir}") {
+                    sh "cd chapter-3/cicd/cd"
+                    sh """
+                    sed -i 's/IMAGE_PATH/${build_tag}/g' api-manifest.yaml
+                    """
+                    sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
+                }
             }
         }
     }

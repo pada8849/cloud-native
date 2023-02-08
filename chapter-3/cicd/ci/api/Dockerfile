@@ -5,6 +5,6 @@ ENV JARNAME="jshERP.jar"
 
 WORKDIR /app
 # copy jar
-COPY $JARNAME.jar /app/
+COPY $JARNAME /app/
 #使用 shell 处理
 ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar -Duser.timezone=GMT+8 /app/$JARNAME --spring.profiles.active=$ACTIVE "]

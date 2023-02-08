@@ -8,7 +8,7 @@ do
  else
   if [ "${file##*.}"x = "jar"x ];then
      	echo $1"/"$file
-      cp $1"/"$file /app/jar/
+      cp -af $1"/"$file /app/jar/
   fi
  fi
 done
