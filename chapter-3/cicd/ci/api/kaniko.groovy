@@ -5,7 +5,7 @@ metadata:
   name: kaniko
 spec:
   containers:
-  - name: nltp
+  - name: jnlp
     image: 10.0.1.125:5000/library/inbound-agent:3077.vd69cf116da_6f-3-jdk11
     volumeMounts:
       - name: workspace-volume
