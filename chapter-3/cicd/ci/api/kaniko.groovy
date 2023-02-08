@@ -40,7 +40,7 @@ spec:
 ) {
     node(POD_LABEL)  {
         workdir="/home/jenkins/agent/workspace/kaniko"
-        imageurl="192.168.11.14:5000"
+        imageurl="10.0.1.125:5000/library"
         container('jnlp'){
             script {
                 sh 'pwd && ls'
@@ -70,8 +70,10 @@ spec:
             }
         }
         container('kaniko') {
-            sh 'cp -af /app/jar/*.jar .'
-            sh '/kaniko/executor -f Dockerfile -c . --destination=your_registry/your_repo:build_tag'
+            dir ("${workdir}") {
+                sh 'cp -af /app/jar/*.jar .'
+                sh "/kaniko/executor -f Dockerfile -c . --destination=${imageurl}/api:${build_tag}"
+            }
         }
     }
 }
