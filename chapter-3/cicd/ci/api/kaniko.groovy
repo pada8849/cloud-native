@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
   - name: jnlp
-    image: 10.0.1.125:5000/library/inbound-agent:3077.vd69cf116da_6f-3-jdk11
+    image: 10.0.1.125:5000/library/inbound-agent-kubectl:latest
     volumeMounts:
       - name: workspace-volume
         mountPath: /home/jenkins/agent    
