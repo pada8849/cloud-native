@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: jsh-api
+  name: jsh-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jsh-api
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: jsh-api
+    spec:
+      containers:
+      - env:
+        - name: DB_HOST
+          value: jsh-mysql
+        - name: DB_PASSWD
+          value: password
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: root
+        - name: JARNAME
+          value: jshERP.jar
+        - name: REDIS_HOST
+          value: jsh-redis
+        - name: REDIS_PORT
+          value: "6379"
+        image: 10.0.1.125:5000/library/api:IMAGE_TAG
+        imagePullPolicy: ""
+        name: jsh-api
+        ports:
+        - containerPort: 9999
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: jsh-api
+  name: jsh-api
+  namespace: default
+spec:
+  ports:
+    - name: "9999"
+      port: 9999
+      targetPort: 9999
+  selector:
+    io.kompose.service: jsh-api
