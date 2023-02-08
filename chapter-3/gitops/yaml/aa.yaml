@@ -6,7 +6,7 @@ metadata:
   name: jsh-api
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: jsh-api
@@ -32,7 +32,7 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 10.0.1.125:5000/library/api:IMAGE_TAG
+        image: 10.0.1.125:5000/library/api:efe6079
         imagePullPolicy: ""
         name: jsh-api
         ports:
