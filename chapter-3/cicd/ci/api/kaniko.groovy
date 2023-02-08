@@ -54,42 +54,52 @@ spec:
         cddir="${workdir}/chapter-3/cicd/cd"
         imageurl="${REGISTRY}/library"
         kubeconfig="/tmp/kube/config"
-        container('jnlp'){
-            script {
-                dir ("${workdir}") {
-                    def repositoryUrl = scm.userRemoteConfigs[0].url
-                    sh "git init"
-                    sh "git remote add origin ${repositoryUrl}"
-                    sh "git checkout -b master"
-                    sh "git pull origin master"
+        stages {
+            stage('检出代码') {
+                container('jnlp') {
+                    script {
+                        dir("${workdir}") {
+                            def repositoryUrl = scm.userRemoteConfigs[0].url
+                            sh "git init"
+                            sh "git remote add origin ${repositoryUrl}"
+                            sh "git checkout -b master"
+                            sh "git pull origin master"
+                        }
+                    }
                 }
             }
-        }
-        build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-        container('maven') {
-            script {
-                dir ("${cidir}"){
-                    sh "cp -af settings.xml code  && \
-                              cp -af application.yml code/src/main/resources/application.yml"
-                    sh "cd code && \
-                              mvn clean -s settings.xml && \
-                              mvn -s settings.xml -e -B package"
-                    sh "chmod +x copy.sh && ./copy.sh"
+            stage('mvn 构建') {
+                build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                container('maven') {
+                    script {
+                        dir("${cidir}") {
+                            sh "cp -af settings.xml code  && \
+                                  cp -af application.yml code/src/main/resources/application.yml"
+                            sh "cd code && \
+                                  mvn clean -s settings.xml && \
+                                  mvn -s settings.xml -e -B package"
+                            sh "chmod +x copy.sh && ./copy.sh"
+                        }
+                    }
                 }
             }
-        }
-        container('kaniko') {
-            dir ("${cidir}") {
-                sh 'cp -af /app/jar/*.jar .'
-                sh "executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+            stage('构建运行镜像') {
+                container('kaniko') {
+                    dir("${cidir}") {
+                        sh 'cp -af /app/jar/*.jar .'
+                        sh "executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+                    }
+                }
             }
-        }
-        container('jnlp'){
-            dir ("${cddir}") {
-                sh """
-                sed -i 's/IMAGE_TAG/${build_tag}/g' api-manifest.yaml
-                """
-                sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
+            stage('进行部署') {
+                container('jnlp') {
+                    dir("${cddir}") {
+                        sh """
+                    sed -i 's/IMAGE_TAG/${build_tag}/g' api-manifest.yaml
+                    """
+                        sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
+                    }
+                }
             }
         }
     }
