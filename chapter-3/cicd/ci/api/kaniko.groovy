@@ -85,14 +85,12 @@ spec:
             }
         }
         container('jnlp'){
-                withKubeConfig(){
-                    dir ("${cddir}") {
-                        sh """
-                        sed -i 's/IMAGE_PATH/${build_tag}/g' api-manifest.yaml
-                        """
-                        sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
-                    }
-                }
+            dir ("${cddir}") {
+                sh """
+                sed -i 's/IMAGE_TAG/${build_tag}/g' api-manifest.yaml
+                """
+                sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
+            }
         }
     }
     }

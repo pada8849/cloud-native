@@ -9,7 +9,6 @@
     kubectl get secret -nci jenkins -o yaml | grep jenkins-admin-password: | awk '{print $2}' | base64 --decode
     或者kubectl get secret -n ci jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 -D
     通过http://<节点 ip:以上端口号>/manage/pluginManager/updates/ 访问插件更新中心，使用上一步获取的密码，更新对应插件
-    通过http://<节点 ip:以上端口号>/manage/pluginManager/available 安装kubernetes cli 
 ### 安装 flux
     curl -s https://fluxcd.io/install.sh | sudo bash 
     export GITHUB_TOKEN=<your-token> # 从github 上获取 token
@@ -21,3 +20,4 @@
       --branch=main \
       --path=./clusters/my-cluster \
       --personal
+### 操作过程
