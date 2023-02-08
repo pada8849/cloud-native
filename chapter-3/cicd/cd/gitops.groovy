@@ -45,16 +45,16 @@ spec:
                     sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                     """
                         base64txt = sh(returnStdout: true, script: 'base64 deployment.yaml').trim()
+                        jsondata = "{ \"message\": \"gitops file\", \
+                      \"content\": \"${base64txt}\", \
+                      \"sha\": \"文件的blob sha\" \
+                      }"
                         sh """
                     curl -X PUT \
                       https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml \
                       -H 'Authorization: token ${gittoken}' \
                       -H 'Content-Type: application/json' \
-                      -d '{   \
-                      "message": "gitops file", \
-                      "content": "${base64txt}", \
-                      "sha": "文件的blob sha" \
-                      }'
+                      -d '${jsondata}'
                     """
                     }
                 }
