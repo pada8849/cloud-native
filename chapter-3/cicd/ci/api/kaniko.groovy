@@ -52,7 +52,7 @@ spec:
         workdir="${WORKSPACE}"
         cidir="${workdir}/chapter-3/cicd/ci/api"
         cddir="${workdir}/chapter-3/cicd/cd"
-        imageurl="${REGISTRY}/library"
+
         kubeconfig="/tmp/kube/config"
             stage('检出代码') {
                 container('jnlp') {
@@ -69,6 +69,7 @@ spec:
             }
             stage('mvn 构建') {
                 build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+                imageurl="${REGISTRY}/library/${JOB_NAME}:${build_tag}"
                 container('maven') {
                     script {
                         dir("${cidir}") {
@@ -86,7 +87,7 @@ spec:
                 container('kaniko') {
                     dir("${cidir}") {
                         sh 'cp -af /app/jar/*.jar .'
-                        sh "executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+                        sh "executor -f Dockerfile -c . -d ${imageurl}"
                     }
                 }
             }
@@ -94,7 +95,7 @@ spec:
                 container('jnlp') {
                     dir("${cddir}") {
                         sh """
-                    sed -i 's/IMAGE_URL/${imageurl}/api:${build_tag}/g' api-manifest.yaml
+                    sed -i 's/IMAGE_URL/${imageurl}/g' api-manifest.yaml
                     """
                         sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
                     }
