@@ -57,11 +57,9 @@ spec:
         container('maven') {
             script {
                 dir ("${workdir}"){
-                    sh "ls && pwd"
                     sh "cd chapter-3/cicd/ci/api && \
                               cp -af settings.xml code  && \
-                              cp -af application.yml code/src/main/resources/application.yml && \
-                              cd code && ls "
+                              cp -af application.yml code/src/main/resources/application.yml"
                     sh "cd chapter-3/cicd/ci/api/code && \
                               mvn clean -s settings.xml && \
                               mvn -s settings.xml -e -B package"
@@ -71,8 +69,8 @@ spec:
         }
         container('kaniko') {
             dir ("${workdir}") {
-                sh 'cp -af /app/jar/*.jar .'
-                sh "executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+                sh 'cd chapter-3/cicd/ci/api && cp -af /app/jar/*.jar .'
+                sh "cd chapter-3/cicd/ci/api && executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
             }
         }
     }
