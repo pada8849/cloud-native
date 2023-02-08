@@ -49,7 +49,9 @@ spec:
 """
 ) {
     node(POD_LABEL)  {
-        workdir="/home/jenkins/agent/workspace/kaniko"
+        workdir="${WORKSPACE}"
+        cidir="${workdir}/chapter-3/cicd/ci/api"
+        cddir="${workdir}/chapter-3/cicd/cd"
         imageurl="10.0.1.125:5000/library"
         kubeconfig="/tmp/kube/config"
         container('jnlp'){
@@ -66,27 +68,25 @@ spec:
         build_tag = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         container('maven') {
             script {
-                dir ("${workdir}"){
-                    sh "cd chapter-3/cicd/ci/api && \
-                              cp -af settings.xml code  && \
+                dir ("${cidir}"){
+                    sh "cp -af settings.xml code  && \
                               cp -af application.yml code/src/main/resources/application.yml"
-                    sh "cd chapter-3/cicd/ci/api/code && \
+                    sh "cd code && \
                               mvn clean -s settings.xml && \
                               mvn -s settings.xml -e -B package"
-                    sh "cd chapter-3/cicd/ci/api && chmod +x copy.sh && ./copy.sh"
+                    sh "chmod +x copy.sh && ./copy.sh"
                 }
             }
         }
         container('kaniko') {
-            dir ("${workdir}") {
-                sh 'cd chapter-3/cicd/ci/api && cp -af /app/jar/*.jar .'
-                sh "cd chapter-3/cicd/ci/api && ls && pwd && executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
+            dir ("${cidir}") {
+                sh 'cp -af /app/jar/*.jar .'
+                sh "executor -f Dockerfile -c . -d ${imageurl}/api:${build_tag}"
             }
         }
         container('jnlp'){
             script {
-                dir ("${workdir}") {
-                    sh "cd chapter-3/cicd/cd"
+                dir ("${cddir}") {
                     sh """
                     sed -i 's/IMAGE_PATH/${build_tag}/g' api-manifest.yaml
                     """
