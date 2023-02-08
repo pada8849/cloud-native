@@ -94,7 +94,7 @@ spec:
                 container('jnlp') {
                     dir("${cddir}") {
                         sh """
-                    sed -i 's/IMAGE_TAG/${build_tag}/g' api-manifest.yaml
+                    sed -i 's/IMAGE_URL/${imageurl}/api:${build_tag}/g' api-manifest.yaml
                     """
                         sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
                     }

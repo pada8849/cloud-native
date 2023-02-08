@@ -32,7 +32,7 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 10.0.1.125:5000/library/api:IMAGE_TAG
+        image: IMAGE_URL
         imagePullPolicy: ""
         name: jsh-api
         ports:
