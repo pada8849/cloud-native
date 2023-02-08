@@ -47,14 +47,14 @@ spec:
                         base64txt = sh(returnStdout: true, script: 'base64 deployment.yaml').trim()
                         sh """
                     curl -X PUT \
-                      https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml \\
-                      -H 'Authorization: token ${gittoken}' \\
+                      https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml \
+                      -H 'Authorization: token ${gittoken}' \
                       -H 'Content-Type: application/json' \
-                      -d '{
-                      "message": "gitops file",
-                      "content": "${base64txt}",
-                      "sha": "文件的blob sha"
-                    }'
+                      -d '{   \
+                      "message": "gitops file", \
+                      "content": "${base64txt}", \
+                      "sha": "文件的blob sha" \
+                      }'
                     """
                     }
                 }
