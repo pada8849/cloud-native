@@ -7,6 +7,15 @@ spec:
   containers:
   - name: jnlp
     image: ${REGISTRY}/library/inbound-agent-kubectl:latest
+    volumeMounts:
+      - name: workspace-volume
+        mountPath: /home/jenkins/agent    
+      - name: github-token
+        mountPath: /tmp/git 
+  volumes:
+    - name: github-token
+      configMap:
+        name: github
 """
 ) {
     node(POD_LABEL)  {
@@ -14,6 +23,7 @@ spec:
         cidir="${workdir}/chapter-3/cicd/ci/api"
         cddir="${workdir}/chapter-3/cicd/cd"
         imageurl="${REGISTRY}/library"
+        gittoken = sh(returnStdout: true, script: 'cat /tmp/git/token').trim()
         kubeconfig="/tmp/kube/config"
             stage('检出代码') {
                 container('jnlp') {
@@ -31,12 +41,21 @@ spec:
             stage('进行部署') {
                 container('jnlp') {
                     dir("${cddir}") {
-                        sh "sleep 1000"
                         sh """
-                    sed -i 's/IMAGE_TAG/${build_tag}/g' api-manifest.yaml
+                    sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                     """
-                        sh "kubectl apply -f api-manifest.yaml --kubeconfig=${kubeconfig}"
-                        sh "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/aa.yaml"
+                        base64txt = sh(returnStdout: true, script: 'base64 deployment.yaml').trim()
+                        sh """
+                    curl -X PUT \
+                      https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/aa.yaml \\
+                      -H 'Authorization: token ${gittoken}' \\
+                      -H 'Content-Type: application/json' \
+                      -d '{
+                      "message": "gitops file",
+                      "content": "${base64txt}",
+                      "sha": "文件的blob sha"
+                    }'
+                    """
                     }
                 }
             }

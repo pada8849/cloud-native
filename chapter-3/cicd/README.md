@@ -17,6 +17,8 @@
       --private-key-file=<个人 ssh 私钥位置> \
       --branch=master \
       --path=./clusters/my-cluster 
+    #使用 github 仓库
+    
 ### 操作过程
 #### 准备镜像
     #基于inbound-agent制作一个包含 kubectl 的基础镜像
@@ -49,7 +51,7 @@
     在 jenkins 进行构建，并查看构建日志
     选择 pipeline 进行 webhook 设置：
     在configure页面Build Triggers勾选Generic Webhook Trigger，然后在Token处输入触发 token 如:jsh-api
-    访问http://<jenkins-ip:端口号>//generic-webhook-trigger/invoke?token=jsh-api 触发构建
+    访问http://<jenkins-ip:端口号>/generic-webhook-trigger/invoke?token=jsh-api 触发构建
     在 git 仓库配置对应 webhook 以实现 push 成功构建
 #### 使用 gitOps 分离构建与部署
        fluxctl install \
@@ -58,3 +60,6 @@
     --git-url= \
     --git-path=chapter-3/cicd/cd \
     --namespace=k8s | kubectl apply -f -
+### 注意事项
+##### 1.如不更新Kubernetes插件，可能出现报错
+##### 2.如构建流水线持续出现Waiting for next available executor，前往http://<jenkins-ip:端口号>/computer/(built-in)/configure添加executors数量
