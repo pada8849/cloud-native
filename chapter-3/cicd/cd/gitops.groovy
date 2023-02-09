@@ -44,7 +44,7 @@ spec:
                         sh """
                     sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                     """
-                        base64txt = sh(returnStdout: true, script: 'base64 deployment.yaml')
+                        base64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
                         sh "echo '$base64txt'"
                         jsondata = "{ \"message\": \"gitops file\", \
                       \"content\": \"${base64txt}\", \
