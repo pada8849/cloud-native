@@ -71,7 +71,7 @@ spec:
                         dir("${cidir}") {
                             sh "cp -af .yarnrc code "
                             sh "cd code && \
-                                  YARN_CACHE_FOLDER=/root/.yarn yarn install && \
+                                  YARN_CACHE_FOLDER=/tmp/.yarn yarn install && \
                                   yarn build"
                         }
                     }
