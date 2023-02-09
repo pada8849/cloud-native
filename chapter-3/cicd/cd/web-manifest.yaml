@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: jsh-web
+  name: jsh-web
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: jsh-web
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: jsh-web
+    spec:
+      containers:
+      - image: {CODE}
+        imagePullPolicy: ""
+        name: jsh-api
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: jsh-web
+  name: jsh-web
+  namespace: default
+spec:
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    io.kompose.service: jsh-web
+  type: NodePort
