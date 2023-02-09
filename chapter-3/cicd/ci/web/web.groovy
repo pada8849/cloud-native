@@ -56,8 +56,9 @@ spec:
                             sh "git remote add origin ${repositoryUrl}"
                             sh "git checkout -b master"
                             sh "git pull origin master"
+                        }
+                        dir("${cidir}") {
                             sh "cd code && git clone https://gitee.com/jishenghua/JSH_ERP.git && mv JSH_ERP/jshERP-web/* . && rm -rf JSH_ERP "
-
                         }
                     }
                 }
