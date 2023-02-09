@@ -44,11 +44,13 @@ spec:
                         sh """
                     sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                     """
-                        base64txt = sh(returnStdout: true, script: 'base64 deployment.yaml').trim()
+                        base64txt = sh(returnStdout: true, script: 'base64 deployment.yaml')
+                        sh "echo $base64txt"
                         jsondata = "{ \"message\": \"gitops file\", \
                       \"content\": \"${base64txt}\", \
                       \"sha\": \"文件的blob sha\" \
                       }"
+                        sh "echo $jsondata"
                         sh """
                     curl -X PUT \
                       https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml \
