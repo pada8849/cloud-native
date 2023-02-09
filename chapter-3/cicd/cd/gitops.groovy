@@ -45,7 +45,7 @@ spec:
                     sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                     """
                         base64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
-                        shatxt = sh(returnStdout: true, script: 'sha1sum deployment.yaml |  awk \'{print $1}\'')
+                        shatxt = sh(returnStdout: true, script: 'sha1sum deployment.yaml |  awk \'{print $1}\'').trim()
                         jsondata = "{ \"message\": \"gitops file\", \
                                       \"content\": \"${base64txt}\", \
                                       \"sha\": \"${shatxt}\" \
