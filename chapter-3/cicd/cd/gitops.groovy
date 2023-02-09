@@ -45,11 +45,11 @@ spec:
                     sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                     """
                         base64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
-                        sh "echo '$base64txt'"
+                        shatxt = sh(returnStdout: true, script: 'sha1sum deployment.yaml')
                         jsondata = "{ \"message\": \"gitops file\", \
-                      \"content\": \"${base64txt}\", \
-                      \"sha\": \"文件的blob sha\" \
-                      }"
+                                      \"content\": \"${base64txt}\", \
+                                      \"sha\": \"${shatxt}\" \
+                                    }"
                         sh "echo '$jsondata'"
                         sh """
                     curl -X PUT \
