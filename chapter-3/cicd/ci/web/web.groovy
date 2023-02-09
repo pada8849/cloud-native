@@ -70,7 +70,7 @@ spec:
                     script {
                         dir("${cidir}") {
                             sh "cp -af .yarnrc code "
-                            sh "cd code && \
+                            sh "cd code && yarn config set registry https://registry.npm.taobao.org/ && \
                                   YARN_CACHE_FOLDER=/tmp/.yarn yarn install && \
                                   yarn build"
                         }
