@@ -13,12 +13,21 @@
 #### 安装 flux 并进行集群配置
     curl -s https://fluxcd.io/install.sh | sudo bash 
     #使用常规 git 仓库
-       flux bootstrap git --url=ssh://<常规 git仓库> \
-      --private-key-file=<个人 ssh 私钥位置> \
-      --branch=master \
-      --path=./clusters/my-cluster 
+    flux bootstrap git \
+      --url=https://<host>/<org>/<repository> \
+      --username=<my-username> \
+      --password=<my-password> \
+      --token-auth=true \
+      --path=clusters/my-cluster
     #使用 github 仓库
-    
+    export GITHUB_TOKEN=<your-token>
+    export GITHUB_USER=<your-username>
+    flux bootstrap github \
+      --owner=$GITHUB_USER \
+      --repository=fleet-infra \
+      --branch=main \
+      --path=./clusters/my-cluster \
+      --personal
 ### 操作过程
 #### 准备镜像
     #基于inbound-agent制作一个包含 kubectl 的基础镜像
