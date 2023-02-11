@@ -38,6 +38,22 @@ spec:
         ports:
         - containerPort: 9999
         resources: {}
+        livenessProbe:
+          tcpSocket:
+            port: 9999
+          initialDelaySeconds: 35
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 9999
+          initialDelaySeconds: 35
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
       restartPolicy: Always
 ---
 apiVersion: v1
