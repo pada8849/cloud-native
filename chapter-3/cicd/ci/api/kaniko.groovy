@@ -110,7 +110,7 @@ spec:
                                """
                         if ("${CDOPS}"=="gitops"){
                             base64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
-                            shatxt = sh(returnStdout: true, script: "curl -X  ${gitopsfile} \
+                            shatxt = sh(returnStdout: true, script: "curl -X GET \'${gitopsfile}\' \
                                       -H \'Authorization: token ${gittoken}\' \
                                       -H \'Content-Type: application/json\' \
                                             | jq '.[0].sha' ")
