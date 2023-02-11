@@ -102,7 +102,7 @@ spec:
                             sh """
                                 sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
                                """
-                        if (${CDOPS}=="gitops"){
+                        if ("${CDOPS}"=="gitops"){
                             base64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
                             shatxt = sh(returnStdout: true, script: "curl -X  ${gitopsfile} \
                                       -H \'Authorization: token ${gittoken}\' \
