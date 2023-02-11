@@ -77,7 +77,8 @@ spec:
                     script {
                         dir("${cidir}") {
                             sh "cp -af settings.xml code  && \
-                                  cp -af application.yml code/src/main/resources/application.yml"
+                                  cp -af application.yml code/src/main/resources/application.yml && \
+                                  rm -f code/src/main/resources/application.properties"
                             sh "cd code && \
                                   mvn clean -s settings.xml && \
                                   mvn -s settings.xml -e -B package"
