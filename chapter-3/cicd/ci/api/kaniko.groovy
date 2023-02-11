@@ -12,6 +12,8 @@ spec:
         mountPath: /home/jenkins/agent    
       - name: kube-config
         mountPath: /tmp/kube    
+      - name: github-token
+        mountPath: /tmp/git 
   - name: kaniko
     image: ${REGISTRY}/library/executor:debug
     imagePullPolicy: Always
@@ -46,6 +48,9 @@ spec:
     - name: kube-config
       configMap:
         name: kube
+    - name: github-token
+      configMap:
+        name: github
 """
 ) {
     node(POD_LABEL)  {
@@ -53,6 +58,7 @@ spec:
         cidir="${workdir}/chapter-3/cicd/ci/api"
         cddir="${workdir}/chapter-3/cicd/cd"
         gitopsfile = "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml"
+        gittoken = sh(returnStdout: true, script: 'cat /tmp/git/token').trim()
         kubeconfig="/tmp/kube/config"
             stage('检出代码') {
                 container('jnlp') {
