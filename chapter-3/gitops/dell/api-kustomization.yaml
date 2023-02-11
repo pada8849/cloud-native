@@ -12,19 +12,3 @@ spec:
     kind: GitRepository
     name: api
   targetNamespace: default
-  patches:
-    - patch: |-
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: jsh-api
-        spec:
-          template:
-            spec:
-              containers:
-              - name: jsh-api
-                image: 192.168.1.88:5000/library/jsh-api:3b937bd
-      target:
-        name: jsh-api
-        kind: Deployment
-
