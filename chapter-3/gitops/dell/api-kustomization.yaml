@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./chapter-3/gitops/dell/yaml
+  path: ./chapter-3/gitops/yaml
   prune: true
   sourceRef:
     kind: GitRepository
@@ -23,8 +23,8 @@ spec:
             spec:
               containers:
               - name: jsh-api
-                image: 192.168.1.88:5000/library/jsh-api:aabc6f5
+                image: 192.168.1.88:5000/library/jsh-api:3b937bd
       target:
-        name: api
+        name: jsh-api
         kind: Deployment
 

@@ -52,7 +52,7 @@ spec:
         workdir="${WORKSPACE}"
         cidir="${workdir}/chapter-3/cicd/ci/api"
         cddir="${workdir}/chapter-3/cicd/cd"
-
+        gitopsfile = "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml"
         kubeconfig="/tmp/kube/config"
             stage('检出代码') {
                 container('jnlp') {
@@ -98,10 +98,31 @@ spec:
             stage('进行部署') {
                 container('jnlp') {
                     dir("${cddir}") {
-                        sh """
-                    sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
-                    """
-                        sh "kubectl apply -f deployment.yaml --kubeconfig=${kubeconfig}"
+                        script {
+                            sh """
+                                sed -e 's#{CODE}#${imageurl}#g' api-manifest.yaml > deployment.yaml
+                               """
+                        if ($CD_METHOD=="gitops"){
+                            base64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
+                            shatxt = sh(returnStdout: true, script: "curl -X  ${gitopsfile} \
+                                      -H \'Authorization: token ${gittoken}\' \
+                                      -H \'Content-Type: application/json\' \
+                                            | jq '.[0].sha' ")
+                            jsondata = "{ \"message\": \"gitops file\", \
+                                      \"content\": \"${base64txt}\", \
+                                      \"sha\": \"${shatxt}\" \
+                                    }"
+                            sh """
+                                curl -X PUT \
+                                  ${gitopsfile} \
+                                  -H 'Authorization: token ${gittoken}' \
+                                  -H 'Content-Type: application/json' \
+                                  -d '${jsondata}'
+                               """
+                        }else{
+                            sh "kubectl apply -f deployment.yaml --kubeconfig=${kubeconfig}"
+                        }
+                        }
                     }
                 }
             }
