@@ -37,11 +37,10 @@ spec:
         name: jsh-api
         ports:
         - containerPort: 9999
-        resources: {}
         livenessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 35
+          initialDelaySeconds: 80
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
@@ -49,11 +48,18 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 35
+          initialDelaySeconds: 80
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 3
+        resources:
+          limits:
+            cpu: 600m
+            memory: 1000Mi
+          requests:
+            cpu: 20m
+            memory: 300Mi
       restartPolicy: Always
 ---
 apiVersion: v1
