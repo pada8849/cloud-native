@@ -31,8 +31,11 @@
 ### 操作过程
 #### 准备镜像
     #基于inbound-agent制作一个包含 kubectl 的基础镜像
-    #将以前前课程操作中的 linux 版本 kubectl 下载到chapter-2/cicd目录
-    cd chapter-2/cicd
+    cd chapter-3/cicd
+    #下载 jq 以在 shell 请求中进行 json 读取
+    curl -fL "https://kinshy-generic.pkg.coding.net/south/study/jq-linux64?version=latest" -o jq-linux64 && chmod +x jq-linux64
+    #下载 kubectl以便在容器中进行k8s 集群操作
+    curl -fL "https://kinshy-generic.pkg.coding.net/south/study/kubectl-linux64?version=latest" -o kubectl-linux64 && chmod +x kubectl-linux64
     docker build -t <镜像仓库 ip:端口>/library/inbound-agent-kubectl:latest
     docker pull gcr.io/kaniko-project/executor:debug
     docker tag <镜像仓库 ip:端口>/library/executor:debug
