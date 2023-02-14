@@ -55,7 +55,9 @@
       #主要部分一 node
 #### 创建 pipeline
     在jenkins 中创建 item
-    选择pipeline,命名如:kaniko ,然后勾选This project is parameterized ： 添加参数 REGISTRY 默认值 <镜像仓库 ip:端口>
+    选择pipeline,命名如:kaniko ,然后勾选This project is parameterized ： 
+        添加参数 REGISTRY 默认值 <镜像仓库 ip:端口>
+        以及 选项参数CDOPS ：默认为 apply 可选为 gitops
     在pipeline Definition 选择 Pipeline script from SCM
     SCM选择 Git 并输入构建仓库的地址
     在Script Path 处填客户集成脚本的相对路径如：chapter-3/cicd/ci/api/kaniko.groovy
