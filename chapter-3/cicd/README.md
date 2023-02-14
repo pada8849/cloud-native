@@ -36,7 +36,7 @@
     curl -fL "https://kinshy-generic.pkg.coding.net/south/study/jq-linux64?version=latest" -o jq-linux64 && chmod +x jq-linux64
     #下载 kubectl以便在容器中进行k8s 集群操作
     curl -fL "https://kinshy-generic.pkg.coding.net/south/study/kubectl-linux64?version=latest" -o kubectl-linux64 && chmod +x kubectl-linux64
-    docker build -t <镜像仓库 ip:端口>/library/inbound-agent-kubectl:latest
+    docker build -t <镜像仓库 ip:端口>/library/inbound-agent-kubectl:latest .
     docker pull gcr.io/kaniko-project/executor:debug
     docker tag <镜像仓库 ip:端口>/library/executor:debug
     docker pull maven:3.6-jdk-8-alpine
