@@ -50,7 +50,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 80
+          initialDelaySeconds: 120
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
@@ -58,18 +58,18 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 80
+          initialDelaySeconds: 120
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 3
         resources:
           limits:
-            cpu: 1200m
-            memory: 1000Mi
-          requests:
             cpu: 200m
-            memory: 300Mi
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
       restartPolicy: Always
 ---
 apiVersion: v1
