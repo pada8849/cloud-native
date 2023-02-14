@@ -44,6 +44,7 @@ spec:
     node(POD_LABEL)  {
         workdir="${WORKSPACE}"
         cidir="${workdir}/chapter-3/cicd/ci/web"
+        codedir="${workdir}/chapter-3/cicd/ci/web/code"
         cddir="${workdir}/chapter-3/cicd/cd"
 
         kubeconfig="/tmp/kube/config"
@@ -57,8 +58,8 @@ spec:
                             sh "git checkout -b master"
                             sh "git pull origin master"
                         }
-                        dir("${cidir}") {
-                            sh "cd code && git clone https://gitee.com/jishenghua/JSH_ERP.git && mv JSH_ERP/jshERP-web/* . && rm -rf JSH_ERP "
+                        dir("${codedir}") {
+                            sh "git clone https://gitee.com/jishenghua/JSH_ERP.git && mv JSH_ERP/jshERP-web/* . && rm -rf JSH_ERP "
                         }
                     }
                 }
@@ -68,7 +69,7 @@ spec:
                 imageurl="${REGISTRY}/library/${JOB_NAME}:${build_tag}"
                 container('node') {
                     script {
-                        dir("${cidir}") {
+                        dir("${codedir}") {
                             sh "YARN_CACHE_FOLDER=/tmp/.yarn yarn install && \
                                 yarn build"
                         }
