@@ -16,16 +16,6 @@ spec:
       labels:
         io.kompose.service: jsh-api
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: io.kompose.service
-                    operator: In
-                    values:
-                      - jsh-api
-              topologyKey: "kubernetes.io/hostname"
       containers:
       - env:
         - name: DB_HOST
@@ -42,7 +32,9 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 192.168.1.88:5000/library/jsh-api:b02c67b
+        - name: "JAVA_OPTS"
+          value: "-Xms512m -Xmx512m"
+        image: 10.0.1.125:5000/library/kaniko:5b7d311
         imagePullPolicy: ""
         name: jsh-api
         ports:
@@ -50,7 +42,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 80
+          initialDelaySeconds: 130
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
@@ -58,17 +50,17 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 80
+          initialDelaySeconds: 130
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
           failureThreshold: 3
         resources:
           limits:
-            cpu: 1200m
+            cpu: 1000m
             memory: 1000Mi
           requests:
-            cpu: 200m
+            cpu: 500m
             memory: 300Mi
       restartPolicy: Always
 ---
