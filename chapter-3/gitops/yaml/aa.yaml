@@ -16,16 +16,6 @@ spec:
       labels:
         io.kompose.service: jsh-api
     spec:
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: io.kompose.service
-                    operator: In
-                    values:
-                      - jsh-api
-              topologyKey: "kubernetes.io/hostname"
       containers:
       - env:
         - name: DB_HOST
