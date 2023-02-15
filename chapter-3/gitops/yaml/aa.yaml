@@ -32,6 +32,8 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
+        - name: "JAVA_OPTS"
+          value: "-Xms512m -Xmx512m"
         image: 10.0.1.125:5000/library/kaniko:5b7d311
         imagePullPolicy: ""
         name: jsh-api
@@ -40,7 +42,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 120
+          initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
@@ -48,7 +50,7 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 120
+          initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
