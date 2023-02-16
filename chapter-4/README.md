@@ -45,8 +45,36 @@
           successThreshold: 1
           failureThreshold: 3
 ###LimitRange 和 HPA
-    #可查看示例中chapter-4中的 yaml/limitrange.yaml
+    #可查看示例中chapter-4中的 yaml/limitrange.yaml #不建议在充分了解应用场景时打开，会影响 pod 创建
+    #通过 rancher在命名空间设置资源限制
+    #命令行创建 hpa
+    kubectl autoscale deployment jsh-api --cpu-percent=80 --min=1 --max=10
+    #或者使用示例 yaml 亦可以在 rancher 中直接添加
+    kubectl get hpa #可进行查看
     
 ###ingress 配置和 ssl 证书
-    #申请 ssl 证书并下载
-###应用回滚 helm 回滚
+    #申请 ssl 证书并下载 可在云厂商申请单域名ssl 证书或者使用letsencrypt的免费通配证书
+    kubectl create secret tls tls-secret --key tls.key --cert tls.crt  #key 是私钥以-----BEGIN PRIVATE KEY-----开头  crt 是证书 以-----BEGIN CERTIFICATE----- 开头
+    #也可以在 rancher 创建 tls 类型 secret
+    #创建ingress 可修改示例中 ingress
+    kubectl get ing
+    #绑定 host 验证访问ssl 是否生效
+###应用回滚和 helm 回滚
+    #查看可用版本
+    kubectl rollout history deployment/jsh-api
+    #回滚指定版本 不指定时回滚上一版本
+    kubectl rollout undo deployment/jsh-api --to-revision=<revision-number>
+    #查看回滚状态
+    kubectl rollout status deployment/jsh-api 
+    # helm 回滚操作
+    helm list #获取安装的 helm chart
+    helm history <release-name> #查看应用的版本记录
+    helm rollback <release-name> <revision-number> #回滚指定应用指定版本
+    helm status <release-name> #查看状态
+###使用 k6验证 hpa 及接口
+    安装 k6
+    wget https://github.com/grafana/k6/releases/download/v0.42.0/k6-v0.42.0-linux-amd64.tar.gz
+    tar -xzf  k6-v0.42.0-linux-amd64.tar.gz
+    mv k6-v0.42.0-linux-amd64/k6 /usr/local/bin/
+    k6 version
+    
