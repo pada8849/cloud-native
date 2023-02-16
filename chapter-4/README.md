@@ -72,9 +72,32 @@
     helm rollback <release-name> <revision-number> #回滚指定应用指定版本
     helm status <release-name> #查看状态
 ###使用 k6验证 hpa 及接口
-    安装 k6
+    #安装 k6
     wget https://github.com/grafana/k6/releases/download/v0.42.0/k6-v0.42.0-linux-amd64.tar.gz
     tar -xzf  k6-v0.42.0-linux-amd64.tar.gz
     mv k6-v0.42.0-linux-amd64/k6 /usr/local/bin/
     k6 version
-    
+    #开启观测容器
+    watch kubectl get hpa
+    watch kubectl get po
+    watch kubectl top po
+    watch kubectl top no
+    kubectl logs -f $(kubectl get pods -l io.kompose.service=jsh-api | awk 'NR==2{print $1}')
+    k6 run api.js #示例请求在 chapter-4/k6script 目录
+#注意事项
+###1.资源限制与探针的相互影响，如果资源限制较小，则容器启动时长会越长，因此需要多次调整以验证合理的值
+###2.如何批量获取接口实现请求
+##### A.浏览器抓包法
+    在 chrome 浏览器进行操作并查看网络请求，以 har 的格式导出所有请求
+    使用grafana/har-to-k6:latest镜像
+    docker run --rm -v ${PWD}:/local kili-docker.pkg.coding.net/ebes/ot/grafana/har-to-k6:latest   /local/api.har -o /local/k6-har.js
+    下载 k6-har.js 并移除不需要的内容
+    添加认证过程及请求时间
+##### B.swagger 生成法
+    获取接口的 swagger json 文件
+    使用openapitools/openapi-generator-cli镜像
+    docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
+        -i /local/spec.json \
+        -g k6 \
+        -o /local/k6-test/
+    添加认证过程及请求时间
