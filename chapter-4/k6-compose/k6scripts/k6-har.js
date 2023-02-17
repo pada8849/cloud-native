@@ -23,6 +23,7 @@ export const options = {}
 
 export default function main(data) {
   let jsonBody = JSON.parse(data.body)
+    console.log(data,jsonBody)
   const headoptions ={headers: {"Content-Type": "application/json", "Accept": "*/*",'X-Access-Token': `${jsonBody.data.token}`,}};
   let response
 
@@ -39,14 +40,12 @@ export default function main(data) {
   response = http.post(
     BASE_URL+'/function/findMenuByPNumber',
     '{"pNumber":0,"userId":63}',
-    {
-     headers: {"Content-Type": "application/json", "Accept": "*/*",'X-Access-Token': `${jsonBody.data.token}`,},
-    }
+      headoptions,
   )
   console.log(response,jsonBody.data.token)
 
   response = http.get(BASE_URL+'/user/infoWithTenant', {
-   headers: {"Content-Type": "application/json", "Accept": "*/*",'X-Access-Token': `${jsonBody.data.token}`,},
+      headoptions,
   })
   console.log(response,jsonBody.data.token)
   response = http.get(

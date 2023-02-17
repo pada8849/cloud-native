@@ -26,13 +26,14 @@ export function setup() {
 }
 export let options = {
     stages: [
-        { duration: '1m', target: 10 }, // ramp up to 400 users
+        { duration: '1m', target: 1 }, // ramp up to 400 users
         // { duration: '1h', target: 1 }, // stay at 400 for ~4 hours
         // { duration: '2m', target: 0 }, // scale down. (optional)
     ],
 };
 export default function(data) {
     let jsonBody = JSON.parse(data.body)
+    console.log(jsonBody)
     const headoptions ={headers: {"Content-Type": "application/json", "Accept": "*/*",'X-Access-Token': `${jsonBody.data.token}`,}};
     group("/material/getMaterialNameList", () => {
 

@@ -84,6 +84,12 @@
     watch kubectl top no
     kubectl logs -f $(kubectl get pods -l io.kompose.service=jsh-api | awk 'NR==2{print $1}')
     k6 run api.js #示例请求在 chapter-4/k6script 目录
+### 使用 docker-compose 运行k6并保存负载测试记录
+    cd chapter-4/k6-compose
+    docker-compose up -d influxdb 
+    docker-compose run -v $PWD/samples:/scripts k6 run /scripts/script.js
+    通过<ip:3000>查看 grafana 并添加面板输入 ip 10660进行 load 并选择数据源保存
+    
 # 注意事项
 ### 1.资源限制与探针的相互影响，如果资源限制较小，则容器启动时长会越长，因此需要多次调整以验证合理的值
 ### 2.如何批量获取接口实现请求
