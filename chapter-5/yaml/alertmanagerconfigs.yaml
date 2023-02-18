@@ -1,0 +1,28 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: default
+  namespace: cattle-monitoring-system
+spec:
+  receivers:
+    - emailConfigs:
+        - authPassword:
+            key: password
+            name: email
+          authUsername: <发送者邮箱>
+          from: <发送者邮箱>
+          sendResolved: true
+          smarthost: smtp.mxhichina.com:25
+          tlsConfig: {}
+          to: <接收者邮箱>
+      name: email
+  route:
+    groupBy:
+      - cattle
+    groupInterval: 5m
+    groupWait: 30s
+    matchers:
+      - name: severity
+        value: warning
+    receiver: email
+    repeatInterval: 4h

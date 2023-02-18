@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: k6
+  name: k6
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: k6
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        io.kompose.service: k6
+    spec:
+      containers:
+        - env:
+            - name: K6_OUT
+              value: influxdb=http://influxdb:8086/k6
+          image: grafana/k6:latest
+          command: ["tail","-f","/dev/null"]
+          name: k6
+          ports:
+            - containerPort: 6565
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      restartPolicy: Always
+      hostAliases:
+        - ip: 192.168.1.88
+          hostnames:
+            - ca.com
+            - a.com
+
