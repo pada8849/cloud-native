@@ -19,8 +19,15 @@ spec:
       containers:
         - env:
             - name: URL
-              value: <企微机器人 webhook url>
-          image: <镜像仓库>/library/webhook-wework:home
+              value: https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=<替换 key>
+          image: <替换镜像仓库>/library/webhook-wework:n
+          args:
+           - python
+           - /app/main.py
+           - -p
+           - "5000"
+           - -k
+           - https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=<替换 key>
           name: webhook
           ports:
             - containerPort: 5000

@@ -50,3 +50,19 @@ spring:
 tenant:
   tryDayLimit: 3000
   userNumLimit: 1000000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus  # 打开 Prometheus 的 Web 访问 Path
+  metrics:
+    # 下面选项建议打开，以监控 http 请求的 P99/P95 等，具体的时间分布可以根据实际情况设置
+    distribution:
+      sla:
+        http:
+          server:
+            requests: 1ms,5ms,10ms,50ms,100ms,200ms,500ms,1s,5s
+    # 在 Prometheus 中添加特别的 Labels
+    tags:
+      # 必须加上对应的应用名，因为需要以应用的维度来查看对应的监控
+      application: jsh-api

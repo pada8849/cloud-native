@@ -84,6 +84,7 @@ spec:
                         dir("${cidir}") {
                             sh "cp -af settings.xml code  && \
                                   cp -af application.yml code/src/main/resources/application.yml && \
+                                  cp -af pom.xml code/pom.xml && \
                                   rm -f code/src/main/resources/application.properties"
                             sh "cd code && \
                                   mvn clean -s settings.xml && \
