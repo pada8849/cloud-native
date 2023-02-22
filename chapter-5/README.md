@@ -50,6 +50,7 @@
     # 查看alertmanager-rancher-monitoring-alertmanager pod 的日志
     #查看 webhook pod 的日志
     #确认企业微信机器人能收到信息
+### 在应用上接入 prometheus 以监控 JVM 状态
 
 # 注意事项
 ### 1.在配置AlertmanagerConfigs的接收者时，界面上缺少参数会导致创建不成功，需要切换为 yaml 并添加接收者名称
