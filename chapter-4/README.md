@@ -86,7 +86,7 @@
     k6 run api.js #示例请求在 chapter-4/k6script 目录
 ### 使用 docker-compose 运行k6并保存负载测试记录
     cd chapter-4/k6-compose
-    docker-compose up -d influxdb 
+    docker-compose up -d influxdb grafana
     docker-compose run -v $PWD/samples:/scripts k6 run /scripts/script.js #注意需要修改 BASE_URL 为容器内可以访问
     通过<ip:3000>查看 grafana 并从 create-->import 添加面板输入 id 10660进行 load 并选择数据源保存
     
