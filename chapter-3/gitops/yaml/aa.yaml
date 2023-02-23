@@ -42,7 +42,7 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 10.0.1.125:5000/library/kaniko:4054fd6
+        image: 10.0.1.125:5000/library/kaniko:9880fd2
         imagePullPolicy: ""
         name: jsh-api
         ports:
