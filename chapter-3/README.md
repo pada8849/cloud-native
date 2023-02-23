@@ -62,7 +62,7 @@ sudo update-grub
     token: <以上 token>
     systemctl enable rke2-agent.service && systemctl start rke2-agent.service
 ####  安装kubectl并配置 kubeconfig
-    curl -LO https://dl.k8s.io/release/v1.26.1/bin/linux/amd64/kubectl
+    curl -LO https://dl.k8s.io/release/v1.24.7/bin/linux/amd64/kubectl
     chmod +x kubectl
     sudo mv kubectl /usr/local/bin/
     source <(kubectl completion bash)

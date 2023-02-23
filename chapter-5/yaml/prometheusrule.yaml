@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    prometheus-operator-validated: "true"
+  name: na-alert
+  namespace: default
+spec:
+  groups:
+    - name: ns
+      rules:
+        - alert: app-down
+          annotations:
+            description: 在命名空间 {{ $labels.namespace }} 的{{ $labels.pod }}没有正常启动
+            message: One or more targets are unreachable.
+            runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-targetdown
+            summary: One or more targets are unreachable.
+          expr: ' sum by(namespace, pod) (max by(namespace, pod) (kube_pod_status_phase{job="kube-state-metrics",namespace="default",phase=~"Pending|Unknown"})
+        * on(namespace, pod) group_left(owner_kind) topk by(namespace, pod) (1, max
+        by(namespace, pod, owner_kind) (kube_pod_owner{owner_kind!="Job"}))) > 0'
+          for: 10s
+          labels:
+            namespace: default
+            severity: 警告

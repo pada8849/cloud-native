@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: jsh-api # 填写一个唯一名称
+  namespace: default # namespace固定，不要修改
+spec:
+  endpoints:
+    - interval: 30s
+      port: 8080-tcp # 填写service yaml中Prometheus Exporter对应的Port的Name
+      path: /actuator/prometheus  # 填写Prometheus Exporter对应的Path的值，不填默认/metrics
+  namespaceSelector:  # 选择要监控service所在的namespace
+    matchNames:
+      - default
+  selector: # 填写要监控service的Label值，以定位目标service
+    matchLabels:
+      app: jsh-api

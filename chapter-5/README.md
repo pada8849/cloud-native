@@ -50,8 +50,62 @@
     # 查看alertmanager-rancher-monitoring-alertmanager pod 的日志
     #查看 webhook pod 的日志
     #确认企业微信机器人能收到信息
+### 设置应用的 prometheus rule及告警
+    #打开 rancher 的监控菜单下的Advanced下的 PrometheusRule
+    #选择对应的命名空间，填写规则名，组名，添加告警，添加告警名称，可填写以下 PromQL 表达式
+    sum by(namespace, pod) (max by(namespace, pod) (kube_pod_status_phase{job="kube-state-metrics",namespace="default",phase=~"Pending|Unknown"})
+            * on(namespace, pod) group_left(owner_kind) topk by(namespace, pod) (1, max
+            by(namespace, pod, owner_kind) (kube_pod_owner{owner_kind!="Job"}))) > 0
+    # 注意如要正常通过 webhook 发送告警，要填写注释内容，添加后内容如yaml/prometheusrule.yaml所示
+    # 添加完成后可在 Prometheus Alerts 面板中看到添加的规则
+    # 添加AlertmanagerConfigs，步骤如上一章中的步骤操作即可
+    # 手动制造对应故障，如设置高 HPA 最小值但设置节点反亲和，导致部分 pod 一直处于 pending 状态
+    # 确认查收到告警通知以及故障解决
+### 使用chaos mesh注入故障以帮助验证
+    #安装 chaos mesh
+    curl -sSL https://mirrors.chaos-mesh.org/v2.5.1/install.sh | bash
+    kubectl get svc -n chaos-mesh #获取 nodeport 端口号
+    #访问 <ip:以上端口号> 进行混沌试验
 ### 在应用上接入 prometheus 以监控 JVM 状态
-
+    # 准备pom.xml 及 application.yml配置
+    vim pom.xml #加入以下内容
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-registry-prometheus</artifactId>
+            </dependency>
+    vim application.yml #加入以下内容
+            management:
+              endpoints:
+                web:
+                  exposure:
+                    include: prometheus  # 打开 Prometheus 的 Web 访问 Path
+              metrics:
+                # 下面选项建议打开，以监控 http 请求的 P99/P95 等，具体的时间分布可以根据实际情况设置
+                distribution:
+                  sla:
+                    http:
+                      server:
+                        requests: 1ms,5ms,10ms,50ms,100ms,200ms,500ms,1s,5s
+                # 在 Prometheus 中添加特别的 Labels
+                tags:
+                  # 必须加上对应的应用名，因为需要以应用的维度来查看对应的监控
+                  application: jsh-api
+    #在构建的 groovy 脚本中加入cp -af pom.xml code/pom.xml
+    # 执行构建和部署，完成后访问<应用 url>/actuator/prometheus验证
+    # 配置ServiceMonitor,参考 yaml/servicemonitor.yaml
+    # 在grafana 里导入 id 为12856 的面板查看验证
+### 使用 kubecost 查看资源情况适配 Finops
+    # 在 rancher 应用中安装 kubecost
+    # 安装完成后配置 ingress 域名进行访问
+### 安装开启 logging
+     # 在 rancher 集群工具中安装 logging
+     # 安装es 
+     # 配置Cluster out
+     # 配置flow
 # 注意事项
 ### 1.在配置AlertmanagerConfigs的接收者时，界面上缺少参数会导致创建不成功，需要切换为 yaml 并添加接收者名称
 ### 2.创建群聊机器人并获取对应 webhook url
