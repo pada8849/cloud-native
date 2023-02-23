@@ -52,7 +52,7 @@ tenant:
   userNumLimit: 1000000
 management:
   server:
-    port: 9999
+    port: 8080
     servlet:
       context-path: /actuator
   endpoints:
