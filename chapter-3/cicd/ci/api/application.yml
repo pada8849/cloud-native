@@ -56,7 +56,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: *
+        include: "*"
   metrics:
     # 下面选项建议打开，以监控 http 请求的 P99/P95 等，具体的时间分布可以根据实际情况设置
     distribution:
