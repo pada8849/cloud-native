@@ -50,7 +50,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 20
+          initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
@@ -58,7 +58,7 @@ spec:
         readinessProbe:
           tcpSocket:
             port: 9999
-          initialDelaySeconds: 20
+          initialDelaySeconds: 60
           periodSeconds: 10
           timeoutSeconds: 1
           successThreshold: 1
