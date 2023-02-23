@@ -103,7 +103,11 @@
     # 安装完成后配置 ingress 域名进行访问
 ### 安装开启 logging
      # 在 rancher 集群工具中安装 logging
-     # 安装es 
+     # 安装es
+     kubectl create -f https://download.elastic.co/downloads/eck/2.3.0/crds.yaml
+     kubectl apply -f https://download.elastic.co/downloads/eck/2.3.0/operator.yaml
+     kubectl apply -f  yaml/es.yaml
+     kubectl apply -f  yaml/kibana.yaml   
      # 配置Cluster out
      # 配置flow
 # 注意事项
