@@ -57,7 +57,7 @@ spec:
         workdir="${WORKSPACE}"
         cidir="${workdir}/chapter-3/cicd/ci/api"
         cddir="${workdir}/chapter-3/cicd/cd"
-        gitopsfile = "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/aa.yaml"
+        gitopsfile = "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-3/gitops/yaml/${CLUSTER}/aa.yaml"
         gittoken = sh(returnStdout: true, script: 'cat /tmp/git/token').trim()
         kubeconfig="/tmp/kube/config"
             stage('检出代码') {
