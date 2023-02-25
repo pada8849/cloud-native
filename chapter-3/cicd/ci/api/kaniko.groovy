@@ -3,6 +3,8 @@ podTemplate(
 kind: Pod
 metadata:
   name: kaniko
+  annotations:
+    sidecar.istio.io/inject: "false"
 spec:
   containers:
   - name: jnlp
