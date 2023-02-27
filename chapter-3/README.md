@@ -42,12 +42,8 @@ sudo update-grub
     systemctl enable ntp 
      reboot
 ####  2.安装 rke2
-###### 下载安装基础镜像
-    curl -fL "https://kili-generic.pkg.coding.net/ebes/public-resource/rke2.linux-amd64.tar.gz?version=latest" -o rke2.linux-amd64.tar.gz
-    curl -fL "https://kili-generic.pkg.coding.net/ebes/public-resource/rke2-images.linux-amd64.tar.zst?version=latest" -o rke2-images.linux-amd64.tar.zst
-    curl -fL "https://kili-generic.pkg.coding.net/ebes/public-resource/sha256sum-amd64.txt?version=latest" -o sha256sum-amd64.txt
-    curl -fL "https://kili-generic.pkg.coding.net/ebes/public-resource/install.sh?version=latest" -o install.sh
-    INSTALL_RKE2_ARTIFACT_PATH=/root/rke2-artifacts sh install.sh #主节点和 node 节点都执行
+###### 下载安装基础环境
+    curl -sfL https://rancher-mirror.rancher.cn/rke2/install.sh | INSTALL_RKE2_MIRROR=cn sh -
 ###### 主节点上启动rke2-server
     systemctl enable rke2-server.service && systemctl start rke2-server.service
 ######  从节点上启动 rke2-agent
