@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: jsh-api
-  name: jsh-api
+    app: jsh-api-v2
+  name: jsh-api-v2
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: jsh-api
-      version: v1
+      version: v2
   template:
     metadata:
       labels:
         app: jsh-api
-        version: v1
+        version: v2
     spec:
       affinity:
         podAntiAffinity:
@@ -43,7 +43,7 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 192.168.1.88:5000/library/jsh-api:60afe81
+        image: 10.0.1.125:5000/library/kaniko:99e6656
         imagePullPolicy: ""
         name: jsh-api
         ports:
@@ -72,18 +72,3 @@ spec:
             cpu: 300m
             memory: 500Mi
       restartPolicy: Always
----
-apiVersion: v1
-kind: Service
-metadata:
-  labels:
-    app: jsh-api
-  name: jsh-api
-  namespace: default
-spec:
-  ports:
-    - name: http
-      port: 9999
-      targetPort: 9999
-  selector:
-    app: jsh-api

@@ -10,11 +10,12 @@ spec:
   selector:
     matchLabels:
       app: jsh-api
-  strategy: {}
+      version: v1
   template:
     metadata:
       labels:
         app: jsh-api
+        version: v1
     spec:
       affinity:
         podAntiAffinity:
@@ -81,7 +82,7 @@ metadata:
   namespace: default
 spec:
   ports:
-    - name: "9999"
+    - name: http
       port: 9999
       targetPort: 9999
   selector:

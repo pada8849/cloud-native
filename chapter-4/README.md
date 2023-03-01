@@ -102,8 +102,8 @@
 ##### B.swagger 生成法
     获取接口的 swagger json 文件
     使用openapitools/openapi-generator-cli镜像
-    docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli generate \
-        -i /local/spec.json \
+    docker run --rm -v ${PWD}:/local kili-docker.pkg.coding.net/ebes/ot/openapitools/openapi-generator-cli:latest generate \
+        -i /local/swagger.json \
         -g k6 \
         -o /local/k6-test/
     添加认证过程及请求时间

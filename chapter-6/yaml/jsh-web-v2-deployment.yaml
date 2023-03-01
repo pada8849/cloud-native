@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jsh-web-v2
+  name: jsh-web-v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jsh-web
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: jsh-web
+        version: v2
+    spec:
+      containers:
+      - image: 10.0.1.104:5000/jsh/jsh-page:kit
+        imagePullPolicy: ""
+        name: jsh-web
+        ports:
+        - containerPort: 80
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+

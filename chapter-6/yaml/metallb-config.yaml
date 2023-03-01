@@ -5,4 +5,4 @@ metadata:
   name: config
 spec:
   addresses:
-    - 192.168.1.66-192.168.1.77
+    - 10.0.1.133-10.0.1.134
