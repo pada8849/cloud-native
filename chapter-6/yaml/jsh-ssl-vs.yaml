@@ -1,12 +1,13 @@
-apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
+apiVersion: networking.istio.io/v1beta1
 metadata:
-  name: jsh
+  name: jsh-seorui
+  namespace: default
 spec:
   hosts:
-    - "cia.com"
+    - seorui.com
   gateways:
-    - bookinfo-gateway
+    - seorui-gateway
   http:
     - match:
         - uri:
@@ -22,6 +23,6 @@ spec:
       route:
         - destination:
             host: jsh-web
-            port:
-              number: 80
+            subset: v1
+          weight: 100
 

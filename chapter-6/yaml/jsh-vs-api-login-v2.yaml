@@ -9,19 +9,30 @@ spec:
     - bookinfo-gateway
   http:
     - match:
+        - headers:
+            X-Access-Token:
+              regex: "^.*_.*$"
+      route:
+        - destination:
+            host: jsh-api
+            subset: v2
+    - match:
         - uri:
             prefix: /jshERP-boot
       route:
         - destination:
             host: jsh-api
-            port:
-              number: 9999
+            subset: v1
     - match:
         - uri:
             prefix: /
       route:
         - destination:
             host: jsh-web
-            port:
-              number: 80
+            subset: v1
+          weight: 90
+        - destination:
+            host: jsh-web
+            subset: v2
+          weight: 10
 

@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: jsh-web-v2
+    version: v2
   name: jsh-web-v2
 spec:
   replicas: 1

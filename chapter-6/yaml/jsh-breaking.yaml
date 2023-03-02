@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: jsh-api
+spec:
+  host: jsh-api
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 1
+      http:
+        http1MaxPendingRequests: 1
+        maxRequestsPerConnection: 1
+        #它指定了请求的连接池和HTTP/1.1流量的处理方式。
+        #在这种情况下，连接池的最大连接数被限制为1，
+        #HTTP/1.1最大挂起请求数被限制为1，
+        #并且每个连接的最大请求数也被限制为1。
+    outlierDetection:
+      consecutive5xxErrors: 1
+      interval: 1s
+      baseEjectionTime: 3m
+      maxEjectionPercent: 100
+      #Istio如何检测和处理异常的后端服务。在这种情况下，
+      #如果后端服务返回5xx错误，Istio将连续1次检测到异常，
+      #并且每隔1秒进行一次检测。如果异常持续3分钟，
+      #则Istio将暂时从负载均衡中排除该服务，并在100%的请求失败率下完全删除该服务。
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+    - name: v2
+      labels:
+        version: v2

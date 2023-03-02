@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   labels:
     app: jsh-api-v2
+    version: v2
   name: jsh-api-v2
   namespace: default
 spec:

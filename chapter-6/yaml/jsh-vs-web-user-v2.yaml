@@ -14,14 +14,21 @@ spec:
       route:
         - destination:
             host: jsh-api
-            port:
-              number: 9999
+    - match:
+        - headers:
+             virtual-user:
+              prefix: j
+      route:
+        - destination:
+            host: jsh-web
+            subset: v2
     - match:
         - uri:
             prefix: /
       route:
         - destination:
             host: jsh-web
+            subset: v1
             port:
               number: 80
 

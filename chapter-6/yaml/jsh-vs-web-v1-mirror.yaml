@@ -22,6 +22,11 @@ spec:
       route:
         - destination:
             host: jsh-web
-            port:
-              number: 80
+            subset: v1
+          weight: 100
+      mirror:
+        host: jsh-web
+        subset: v2
+      mirrorPercentage:
+        value: 10
 
