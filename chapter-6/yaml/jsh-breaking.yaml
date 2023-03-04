@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: jsh-api
+  namespace: default
 spec:
   host: jsh-api
   trafficPolicy:

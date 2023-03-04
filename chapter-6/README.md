@@ -59,7 +59,7 @@
     # 完成页面访问并验证流量正常在 kiali 中展示 Graph
 ### 指定路由请求
     # 让所有访问jsh-web的请求只转发到 v1
-    kubectl apply -f yaml/dr.yaml #创建请求目标
+    kubectl apply -f yaml/jsh-dr.yaml #创建请求目标
     kubectl apply -f yaml/jsh-vs-web-v1.yaml #创建路由规则仅发往 v1
     # 访问页面，查看 kiali 确认只有 v1收到请求
     kubectl logs -f -l app=jsh-web,version=v1

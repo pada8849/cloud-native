@@ -5,6 +5,7 @@ metadata:
     app: jsh-web
     version: v1
   name: jsh-web
+  namespace: default
 spec:
   replicas: 1
   selector:

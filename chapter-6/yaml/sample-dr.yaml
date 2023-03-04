@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: productpage
+  namespace: default
 spec:
   host: productpage
   subsets:
@@ -13,6 +14,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: reviews
+  namespace: default
 spec:
   host: reviews
   subsets:
@@ -30,6 +32,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: ratings
+  namespace: default
 spec:
   host: ratings
   subsets:
@@ -50,6 +53,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: details
+  namespace: default
 spec:
   host: details
   subsets:

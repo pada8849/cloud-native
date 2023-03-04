@@ -4,6 +4,7 @@ metadata:
   labels:
     app: jsh-web
   name: jsh-web
+  namespace: default
 spec:
   ports:
   - name: http

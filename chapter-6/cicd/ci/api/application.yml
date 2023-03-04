@@ -1,0 +1,72 @@
+file:
+  path: /opt/jshERP/upload
+manage:
+  roleId: 10
+mybatis-plus:
+  mapper-locations: classpath:./mapper_xml/*.xml
+plugin:
+  pluginConfigFilePath: pluginConfig
+  pluginPath: plugins
+  runMode: prod
+server:
+  port: 9999
+  servlet:
+    context-path: /jshERP-boot
+    session:
+      timeout: 36000
+  tomcat:
+    basedir: /opt/tmp/tomcat
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    password: ${DB_PASSWD:password}
+    url: jdbc:mysql://${DB_HOST:jsh-mysql}:${DB_PORT:3306}/jsh?useUnicode=true&characterEncoding=utf8&useCursorFetch=true&defaultFetchSize=500&allowMultiQueries=true&rewriteBatchedStatements=true&useSSL=false
+    username: ${DB_USER:root}
+    type: com.zaxxer.hikari.HikariDataSource
+    initialization-mode: always
+    continue-on-error: true
+  hikari:
+    minimum-idle: 5
+    connection-test-query: SELECT 1 FROM DUAL
+    maximum-pool-size: 20
+    auto-commit: true
+    idle-timeout: 30000
+    pool-name: SpringBootDemoHikariCP
+    max-lifetime: 60000
+    connection-timeout: 30000
+  redis:
+    host: ${REDIS_HOST:jsh-redis}
+    password: ${REDIS_PASSWD:}
+    port: ${REDIS_PORT:6379}
+  http:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 10485760
+      max-request-size: 10485760
+tenant:
+  tryDayLimit: 3000
+  userNumLimit: 1000000
+management:
+  server:
+    port: 8080
+    servlet:
+      context-path: /actuator
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    # 下面选项建议打开，以监控 http 请求的 P99/P95 等，具体的时间分布可以根据实际情况设置
+    distribution:
+      sla:
+        http:
+          server:
+            requests: 1ms,5ms,10ms,50ms,100ms,200ms,500ms,1s,5s
+    # 在 Prometheus 中添加特别的 Labels
+    tags:
+      # 必须加上对应的应用名，因为需要以应用的维度来查看对应的监控
+      application: jsh-api

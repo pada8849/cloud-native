@@ -2,6 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: jsh-api
+  namespace: default
 spec:
   host: jsh-api
   subsets:
@@ -16,6 +17,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
   name: jsh-web
+  namespace: default
 spec:
   host: jsh-web
   subsets:

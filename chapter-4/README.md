@@ -107,3 +107,4 @@
         -g k6 \
         -o /local/k6-test/
     添加认证过程及请求时间
+bookinfo.yaml

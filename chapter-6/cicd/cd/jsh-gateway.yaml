@@ -1,0 +1,18 @@
+kind: Gateway
+apiVersion: networking.istio.io/v1beta1
+metadata:
+  name: seorui-gateway
+  namespace: default
+spec:
+  servers:
+    - port:
+        number: 443
+        protocol: HTTPS
+        name: https
+      hosts:
+        - seorui.com
+      tls:
+        mode: SIMPLE
+        credentialName: istio-seorui-certs
+  selector:
+    istio: ingressgateway
