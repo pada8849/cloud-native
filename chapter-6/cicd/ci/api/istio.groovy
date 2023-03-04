@@ -74,7 +74,9 @@ spec:
                             sh "git pull origin master"
                         }
                         dir("${cidir}") {
-                            sh "cd code && git clone https://gitee.com/jishenghua/JSH_ERP.git && mv JSH_ERP/jshERP-boot/* . && rm -rf JSH_ERP "
+                            if ("${STEP}"=="CICD"){
+                                sh "cd code && git clone https://gitee.com/jishenghua/JSH_ERP.git && mv JSH_ERP/jshERP-boot/* . && rm -rf JSH_ERP "
+                            }
                         }
                     }
                 }
@@ -84,15 +86,17 @@ spec:
                 imageurl="${REGISTRY}/library/${JOB_NAME}:${build_tag}"
                 container('maven') {
                     script {
-                        dir("${cidir}") {
-                            sh "cp -af settings.xml code  && \
-                                  cp -af application.yml code/src/main/resources/application.yml && \
-                                  cp -af pom.xml code/pom.xml && \
-                                  rm -f code/src/main/resources/application.properties"
-                            sh "cd code && \
-                                  mvn clean -s settings.xml && \
-                                  mvn -s settings.xml -e -B package"
-                            sh "chmod +x copy.sh && ./copy.sh"
+                        if ("${STEP}"=="CICD"){
+                            dir("${cidir}") {
+                                sh "cp -af settings.xml code  && \
+                                      cp -af application.yml code/src/main/resources/application.yml && \
+                                      cp -af pom.xml code/pom.xml && \
+                                      rm -f code/src/main/resources/application.properties"
+                                sh "cd code && \
+                                      mvn clean -s settings.xml && \
+                                      mvn -s settings.xml -e -B package"
+                                sh "chmod +x copy.sh && ./copy.sh"
+                            }
                         }
                     }
                 }
@@ -100,8 +104,10 @@ spec:
             stage('构建运行镜像') {
                 container('kaniko') {
                     dir("${cidir}") {
+                        if ("${STEP}"=="CICD"){
                         sh 'cp -af /app/jar/*.jar .'
                         sh "executor -f Dockerfile -c . -d ${imageurl}"
+                        }
                     }
                 }
             }
@@ -114,8 +120,8 @@ spec:
                                 v2weght=0;
                                 manifestfile="api-manifest.yaml"
                             }else {
-                                v2weght=$(( {CDRATE} ));
-                                v1weght=$(( 100-{CDRATE} ));
+                                v2weght="${CDRATE}";
+                                v1weght="100-${CDRATE}";
                                 manifestfile="api-v2-manifest.yaml"
                             }
 
