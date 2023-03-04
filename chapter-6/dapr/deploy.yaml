@@ -1,0 +1,567 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accountservice
+  namespace: dapr
+  labels:
+    app: accountservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: accountservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: accountservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "accountservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "zipkin"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/accountservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: goodsservice
+  namespace: dapr
+  labels:
+    app: goodsservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: goodsservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: goodsservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "goodsservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "zipkin"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/goodsservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tradeservice
+  namespace: dapr
+  labels:
+    app: tradeservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tradeservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: tradeservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "tradeservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "zipkin"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/tradeservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: publicservice
+  namespace: dapr
+  labels:
+    app: publicservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: publicservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: publicservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "publicservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "zipkin"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/publicservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /.kube
+              name: v1
+      volumes:
+        - name: v1
+          hostPath:
+            path: /run/desktop/mnt/host/c/users/administrator/.kube
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: dapr
+  name: apigateway
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authentication,AuthIgnore'
+spec:
+  rules:
+  - host: api.dapreshop.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: apigateway
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jobservice
+  namespace: dapr
+  labels:
+    app: jobservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jobservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: jobservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "jobservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "zipkin"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/jobservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imageservice
+  namespace: dapr
+  labels:
+    app: imageservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: imageservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: imageservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "imageservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "zipkin"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/imageservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imageservice
+  namespace: dapr
+spec:
+  selector:
+    app: imageservice
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: dapr
+  name: imageservice
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authentication,AuthIgnore'
+spec:
+  rules:
+  - host: image.dapreshop.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: imageservice
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminfrontend
+  namespace: dapr
+  labels:
+    app: adminfrontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminfrontend
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: adminfrontend
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/adminfrontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminfrontend
+  namespace: dapr
+spec:
+  selector:
+    app: adminfrontend
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: dapr
+  name: adminfrontend
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authentication,AuthIgnore'
+spec:
+  rules:
+  - host: admin.dapreshop.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: adminfrontend
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobilefrontend
+  namespace: dapr
+  labels:
+    app: mobilefrontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mobilefrontend
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: mobilefrontend
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/mobilefrontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mobilefrontend
+  namespace: dapr
+spec:
+  selector:
+    app: mobilefrontend
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: dapr
+  name: mobilefrontend
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authentication,AuthIgnore'
+spec:
+  rules:
+  - host: m.dapreshop.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: mobilefrontend
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oauthservice
+  namespace: dapr
+  labels:
+    app: oauthservice
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: oauthservice
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: oauthservice
+        version: v1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "oauthservice"
+        dapr.io/app-port: "80"
+        dapr.io/config: "appconfig"
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/oauthservice:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: dapr
+  name: oauth
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: 'http://admin.dapreshop.com'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authentication,AuthIgnore'
+spec:
+  rules:
+  - host: oauth.dapreshop.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: oauthservice-dapr
+            port:
+              number: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apidocument
+  namespace: dapr
+  labels:
+    app: apidocument
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apidocument
+  minReadySeconds: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: apidocument
+    spec:
+      containers:
+        - name: web
+          image: kili-docker.pkg.coding.net/ebes/ot/apidocument:release
+          env:
+          - name: Logging__Console__FormatterName
+            value: ""
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apidocument
+  namespace: dapr
+spec:
+  selector:
+    app: apidocument
+  ports:
+    - protocol: TCP
+      port: 80
+      name: http
+      targetPort: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: dapr
+  name: apidocument
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/cors-allow-headers: 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authentication,AuthIgnore'
+spec:
+  rules:
+  - host: swagger.dapreshop.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: apidocument
+            port:
+              number: 80

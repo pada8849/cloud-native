@@ -1,0 +1,132 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: dapreshop-gateway
+  namespace: dapr
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: apigateway
+  namespace: dapr
+spec:
+  hosts:
+  - "api.dapreshop.com"
+  gateways:
+  - dapreshop-gateway
+  http:
+  - route:
+    - destination:
+        port:
+          number: 80
+        host: apigateway
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mobiledapreshop
+  namespace: dapr
+spec:
+  hosts:
+  - "m.dapreshop.com"
+  gateways:
+  - dapreshop-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: mobilefrontend
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: admindapreshop
+  namespace: dapr
+spec:
+  hosts:
+  - "admin.dapreshop.com"
+  gateways:
+  - dapreshop-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: adminfrontend
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: oauthdapreshop
+  namespace: dapr
+spec:
+  hosts:
+  - "oauth.dapreshop.com"
+  gateways:
+  - dapreshop-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: oauthservice-dapr
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: apidocument
+  namespace: dapr
+spec:
+  hosts:
+  - "swagger.dapreshop.com"
+  gateways:
+  - dapreshop-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: apidocument
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: imageservice
+  namespace: dapr
+spec:
+  hosts:
+  - "image.dapreshop.com"
+  gateways:
+  - dapreshop-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        port:
+          number: 80
+        host: imageservice

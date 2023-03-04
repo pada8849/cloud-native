@@ -127,6 +127,60 @@
     kubectl logs -f -l app=jsh-web,version=v1 -c istio-proxy #查看流量请求 pod 日志
     kubectl logs -l istio=egressgateway -c istio-proxy -n istio-system # 查看egressgateway 日志
     kubectl exec $(kubectl get pods -l app=jsh-web,version=v1 | awk 'NR==2{print $1}')   --  curl httpbin.org/delay/0
+### 使用 jenkins 进行手动灰度发布的控制
+    # 使用jenkins,见第三章的安装使用
+    # 创建一个 pipeline,从第三章 api 应用上复制，使用cicd/ci/api/istio.groovy作为构建脚本
+    # 添加参数CDRATE用于控制发布比率，STEP用于控制单独的 CD 过程
+    # 进行构建并选择合适的发布方式，完成后进行验证
+    kubectl logs -f -l app=jsh-api,version=v1
+    kubectl logs -f -l app=jsh-api,version=v2
+    for i in {1..100}; do  curl  https://seorui.com/jshERP-boot/platformConfig/getPlatform/name ; done
+    #修改发布比率为50% ，再次验证流量情况
+### 使用 flagger 进行自动化灰度发布
+    helm repo add flagger https://flagger.app
+    kubectl apply -f cicd/flagger/crd.yaml
+    helm upgrade -i flagger flagger/flagger \
+       --namespace=istio-system \
+       --set crd.create=false \
+       --set meshProvider=istio \
+       --set metricsServer=http://rancher-monitoring-prometheus.cattle-monitoring-system:9090
+      # 可使用 rancher 监控的grafana, 需要添加一下 datasource promotheus 并导入flagger文件夹下的三个 json 面板文件
+     helm upgrade -i flagger-grafana flagger/grafana \
+    --namespace=istio-system \
+    --set url=http://rancher-monitoring-prometheus.cattle-monitoring-system:9090 \
+    --set user=admin \
+    --set password=admin
+    # 设置metric和canary
+    kubectl apply -f cicd/flagger/metric.yaml
+    kubectl apply -f cicd/flagger/canary.yaml
+    kubectl set image deployment/jsh-api jsh-api=92.168.1.88:5000/library/istio-api:f6089f6
+    kubectl describe canary jsh-api
+    kubectl describe vs jsh-api
+### 安装 skywalking 集成 istio
+    kubectl apply -f https://raw.githubusercontent.com/istio/istio/release-1.16/samples/addons/extras/skywalking.yaml #安装 istio-skywalking
+    # 如有使用 jaeger 先删除 kubectl delete svc tracing -nistio-system再执行上步
+    # 修改 configmap istio 
+    defaultProviders:
+      tracing:
+      - "skywalking"
+    enableTracing: true
+    extensionProviders:
+    - name: "skywalking"
+      skywalking:
+        service: tracing.istio-system.svc.cluster.local
+        port: 11800
+    通过 <ingressgateway>/productpage 访问并查看拓普链路
+### 体验 dapr
+    #下载 cli
+    curl -fsSL https://raw.githubusercontent.com/dapr/cli/master/install/install.sh | /bin/bash
+    #在 k8s 中安装 dapr
+    dapr init --kubernetes
+    kubectl apply -f dapr/infra.yaml
+    kubectl apply -f dapr/deploy.yaml
+    kubectl apply -f dapr/gateway.yaml
+    # 绑定host 到 ingressgateway的ip admin.dapreshop.com m.dapreshop.com api.dapreshop.com image.dapreshop.com
+    # 绑定host 到  nginx ingress zipkin.dapreshop.com swagger.dapreshop.com
+    # 访问admin.dapreshop.com操作并通过可观测性应用
 # 注意事项
 ### 1.使用 metallb 接入时需要有对应的服务进行验证，故使用 nginx 的应用确认 ip 正常
 ### 2.如有upstream connect error or.....SSL routines:OPENSSL_internal:SSLV3_ALERT_CERTIFICATE_EXPIRED 删除istiod 和 ingressgateway pod
