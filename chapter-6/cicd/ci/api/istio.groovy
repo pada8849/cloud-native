@@ -120,8 +120,8 @@ spec:
                                 v2weght=0;
                                 manifestfile="api-manifest.yaml"
                             }else {
-                                v2weght="${CDRATE}";
-                                v1weght="100-${CDRATE}";
+                                v2weght="${CDRATE}"
+                                v1weght = sh(returnStdout: true, script: 'echo  `expr 100 - $CDRATE`').trim()
                                 manifestfile="api-v2-manifest.yaml"
                             }
 
@@ -144,7 +144,7 @@ spec:
                                       -H 'Content-Type: application/json' \
                                       -d '${jsondata}'
                                    """
-                                vsbase64txt = sh(returnStdout: true, script: 'base64 -w 0 deployment.yaml')
+                                vsbase64txt = sh(returnStdout: true, script: 'base64 -w 0  vs.yaml')
                                 vsshatxt = sh(returnStdout: true, script: "curl -X GET \'${weightvsfile}\' -H \'Authorization: token ${gittoken}\' -H \'Content-Type: application/json\' | jq \'.sha\' ").trim()
 
                                 vsjsondata = "{ \"message\": \"gitops file\", \
