@@ -15,7 +15,7 @@ spec:
       route:
         - destination:
             host: jsh-api
-            subset: 100
+            subset: v1
           weight: 100
         - destination:
             host: jsh-api
