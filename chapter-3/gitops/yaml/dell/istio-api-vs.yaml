@@ -1,65 +1,35 @@
-apiVersion: apps/v1
-kind: Deployment
+kind: VirtualService
+apiVersion: networking.istio.io/v1beta1
 metadata:
-  labels:
-    app: jsh-api-v2
-    version: v2
-  name: jsh-api-v2
+  name: jsh-seorui
   namespace: default
 spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: jsh-api
-      version: v2
-  template:
-    metadata:
-      labels:
-        app: jsh-api
-        version: v2
-    spec:
-      containers:
-      - env:
-        - name: DB_HOST
-          value: jsh-mysql
-        - name: DB_PASSWD
-          value: password
-        - name: DB_PORT
-          value: "3306"
-        - name: DB_USER
-          value: root
-        - name: JARNAME
-          value: jshERP.jar
-        - name: REDIS_HOST
-          value: jsh-redis
-        - name: REDIS_PORT
-          value: "6379"
-        image: 192.168.1.88:5000/library/istio-api:d9d2e26
-        imagePullPolicy: ""
-        name: jsh-api
-        ports:
-        - containerPort: 9999
-        livenessProbe:
-          tcpSocket:
-            port: 9999
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
-        readinessProbe:
-          tcpSocket:
-            port: 9999
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 1
-          successThreshold: 1
-          failureThreshold: 3
-        resources:
-          limits:
-            cpu: 1500m
-            memory: 1000Mi
-          requests:
-            cpu: 300m
-            memory: 500Mi
-      restartPolicy: Always
+  hosts:
+    - seorui.com
+  gateways:
+    - seorui-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /jshERP-boot
+      route:
+        - destination:
+            host: jsh-api
+            subset: 100
+          weight: 100
+        - destination:
+            host: jsh-api
+            subset: v2
+          weight: 0
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: jsh-web
+            subset: v1
+          weight: 100
+        - destination:
+            host: jsh-web
+            subset: v2
+          weight: 0
