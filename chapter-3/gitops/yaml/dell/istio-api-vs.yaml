@@ -34,7 +34,7 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 192.168.1.88:5000/library/istio-api:5d982d6
+        image: 192.168.1.88:5000/library/istio-api:d9d2e26
         imagePullPolicy: ""
         name: jsh-api
         ports:
