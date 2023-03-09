@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    prometheus-operator-validated: "true"
+  name: dns-alert-rules
+  namespace: cattle-monitoring-system
+spec:
+  groups:
+    - name: DNS
+      rules:
+        - alert: DNSServerError
+          annotations:
+            summary: 有服务不可用
+            message: One or more targets are unreachable.
+            description: 监测中的的{{ $labels.target }}访问失败了
+            runbook_url: https://github.com/kubernetes-monitoring/kubernetes-mixin/tree/master/runbook.md#alert-name-targetdown
+          expr: |
+            sum(probe_success) by (target)!=1
+          for: 1m
+          labels:
+            severity: critical
+            alertTag: k8s
+            namespace: cattle-monitoring-system

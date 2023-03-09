@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: monitoring
+  namespace: cattle-monitoring-system
+spec:
+  receivers:
+    - name: webhook
+      webhookConfigs:
+        - httpConfig:
+            tlsConfig: {}
+          sendResolved: false
+          url: http://webhook.default:5000/alertinfo
+  route:
+    groupBy:
+      - dns
+    groupInterval: 5m
+    groupWait: 30s
+    matchers:
+      - name: severity
+        value: critical
+    receiver: webhook
+    repeatInterval: 4h

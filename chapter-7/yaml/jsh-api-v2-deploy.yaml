@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: jsh-api-v2
+    version: v2
+  name: jsh-api-v2
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jsh-api
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: jsh-api
+        version: v2
+    spec:
+      initContainers:
+        - name: init-mysql
+          image: 10.0.1.104:5000/sql-update:new
+      containers:
+      - env:
+        - name: DB_HOST
+          value: jsh-mysql
+        - name: DB_PASSWD
+          value: password
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_USER
+          value: root
+        - name: JARNAME
+          value: jshERP.jar
+        - name: REDIS_HOST
+          value: jsh-redis
+        - name: REDIS_PORT
+          value: "6379"
+        image: 10.0.1.125:5000/library/kaniko:99e6656
+        imagePullPolicy: ""
+        name: jsh-api
+        volumeMounts:
+          - name: data-volume
+            mountPath: /data
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c", "mkdir -pv /tmp/new_dir && cp -ar /data/source_txt /tmp/new_dir"]
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "curl -X POST localhost:9999/actuator/shutdown"]
+        ports:
+        - containerPort: 9999
+        resources:
+          limits:
+            cpu: 1500m
+            memory: 1000Mi
+          requests:
+            cpu: 300m
+            memory: 500Mi
+      volumes:
+        - name: data-volume
+          configMap:
+            name: myapp-data
+      restartPolicy: Always
