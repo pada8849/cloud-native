@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: access-nginx
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: jsh-web
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              access: "true"

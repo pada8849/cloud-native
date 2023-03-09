@@ -2,9 +2,9 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    name: blackbox-api
+    name: blackbox-web
     release: p
-  name: blackbox-api
+  name: blackbox-web
   namespace: cattle-monitoring-system
 spec:
   namespaceSelector:
@@ -34,7 +34,7 @@ spec:
         module:
           - http_2xx
         target:
-          - http://jsh-api.default:9999/jshERP-boot/platformConfig/getPlatform/name    # Target to probe with http.
+          - http://jsh-web.default:80    # Target to probe with http.
     - interval: 15s
       port: http-metrics
       path: /probe
