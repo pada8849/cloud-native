@@ -50,9 +50,9 @@ spec:
 ) {
     node(POD_LABEL)  {
         workdir="${WORKSPACE}"
-        cidir="${workdir}/app-ci/python"
-        cddir="${workdir}/app-cd"
-        gitopsfile = "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-8/app-cd/using/${CLUSTER}/${JOB_NAME}-deploy.yaml"
+        cidir="${workdir}/chapter-8/app-ci/python"
+        cddir="${workdir}/chapter-8/app-cd"
+        gitopsfile = "https://api.github.com/repos/pada8849/cloud-native/contents/chapter-8/app-cd/using/${JOB_NAME}-deploy.yaml"
         gittoken = sh(returnStdout: true, script: 'cat /tmp/git/token').trim()
         kubeconfig="/tmp/kube/config"
             stage('检出代码') {
@@ -64,9 +64,6 @@ spec:
                             sh "git remote add origin ${repositoryUrl}"
                             sh "git checkout -b master"
                             sh "git pull origin master"
-                        }
-                        dir("${cidir}") {
-                            sh "cd code && git clone ${CODE_REPO} "
                         }
                     }
                 }
