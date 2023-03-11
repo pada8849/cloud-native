@@ -75,7 +75,7 @@ spec:
                     script {
                         dir("${cidir}") {
                             sh "pip config set global.cache-dir \"/tmp/.cache/pip\" && pip install -r requirements.txt "
-                            sh "mv /usr/local/lib/python3.9/site-packages /tmp/.cache/pip/site-packages"
+                            sh "cp -ar /usr/local/lib/python3.9/site-packages /tmp/.cache/pip"
                         }
                     }
                 }

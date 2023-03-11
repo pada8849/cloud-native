@@ -6,10 +6,10 @@ WORKDIR /app
 
 COPY . .
 
-RUN ls && mv pip/site-packages/* /usr/local/lib/python3.9/site-packages && \
-    mv ./pip/* /tmp/.cache/pip && \
-    pip install --no-index --find-links=/tmp/.cache/pip -r requirements.txt
+RUN ls && cp -ar pip/site-packages/* /usr/local/lib/python3.9/site-packages && \
+    cp -ar ./pip/* /tmp/.cache/pip && \
+    pip install  -r requirements.txt
 
 
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["python3","-m","uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

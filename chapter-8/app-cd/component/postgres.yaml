@@ -1,21 +1,43 @@
 apiVersion: dapr.io/v1alpha1
-kind: Component
+kind: Configuration
 metadata:
-  name: statestore
-  namespace: default
+  name: pubsubconfig
 spec:
-  type: state.redis
-  version: v1
-  metadata:
-    - name: actorStateStore
-      value: "true"
-    - name: redisHost
-      value: redis-master.os.svc.cluster.local:6379
-    - name: keyPrefix
-      value: none
-    - name: redisPassword
-      secretKeyRef:
-        name: redis
-        key: redis-password
-auth:
-  secretStore: kubernetes
+  pubsub:
+    - name: pubsub
+      pubsubType: rabbitmq
+      metadata:
+        - name: host
+          value: rabbitmqsrv
+        - name: port
+          value: "5672"
+        - name: user
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq
+              key: user
+        - name: password
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq
+              key: password
+  stateStore:
+    - name: postgres
+      stateStoreType: postgresql
+      metadata:
+        - name: host
+          value: postgresqlsrv
+        - name: port
+          value: "5432"
+        - name: database
+          value: mydatabase
+        - name: user
+          valueFrom:
+            secretKeyRef:
+              name: postgresql
+              key: user
+        - name: password
+          valueFrom:
+            secretKeyRef:
+              name: postgresql
+              key: password

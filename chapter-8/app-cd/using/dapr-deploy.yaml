@@ -18,9 +18,9 @@ spec:
         app: dapr
         version: v1
       annotations:
-        dapr.io/enabled: true
+        dapr.io/enabled: "true"
         dapr.io/app-id: dapr
-        dapr.io/app-port: 80
+        dapr.io/app-port: "80"
     spec:
       affinity:
         podAntiAffinity:
