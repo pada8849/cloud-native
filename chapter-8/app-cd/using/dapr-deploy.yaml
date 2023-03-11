@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: dapr
+    version: v1
+  name: dapr
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dapr
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: dapr
+        version: v1
+      annotations:
+        dapr.io/enabled: true
+        dapr.io/app-id: dapr
+        dapr.io/app-port: 80
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - dapr
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - env:
+        - name: DB_HOST
+          value: jsh-mysql
+        image: 192.168.1.88:5000/library/dapr:9a48c4b
+        name: dapr
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 1500m
+            memory: 1000Mi
+          requests:
+            cpu: 300m
+            memory: 500Mi
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dapr
+  name: dapr
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: dapr
