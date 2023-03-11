@@ -36,7 +36,7 @@ spec:
       - env:
         - name: DB_HOST
           value: jsh-mysql
-        image: 192.168.1.88:5000/library/dapr:9a48c4b
+        image: 192.168.1.88:5000/library/dapr:73abbf9
         name: dapr
         ports:
         - containerPort: 80
