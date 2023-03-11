@@ -18,9 +18,9 @@ spec:
         app: {PROJECT}
         version: v1
       annotations:
-        dapr.io/enabled: true
+        dapr.io/enabled: "true"
         dapr.io/app-id: {PROJECT}
-        dapr.io/app-port: {PORT}
+        dapr.io/app-port: "{PORT}"
     spec:
       affinity:
         podAntiAffinity:

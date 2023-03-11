@@ -36,3 +36,17 @@ spec:
     kind: GitRepository
     name: cd-repo
   targetNamespace: flux-system
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: dapr-component
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  path: ./chapter-8/app-cd/using
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: cd-repo
+  targetNamespace: flux-system

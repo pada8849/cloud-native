@@ -25,3 +25,15 @@ async def write_state(key: str, value: str):
     with DaprClient() as d:
         await d.save_state("statestore", key, value)
     return {"key": key, "value": value}
+
+@app.post("/user")
+async def create_user(user: dict):
+    with DaprClient() as d:
+        await d.save_state("postgres", user["id"], user)
+    return user
+
+@app.get("/user/{user_id}")
+async def get_user(user_id: str):
+    with DaprClient() as d:
+        user = await d.get_state("postgres", user_id)
+    return user
