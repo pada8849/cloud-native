@@ -1,0 +1,12 @@
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: statepostgresql
+  namespace: default
+spec:
+  type: bindings.postgres
+  version: v1
+  metadata:
+    # Connection string
+    - name: url
+      value: "user=postgres password=ZYVpUJVu4F host=postgresql.ops-system port=5432 dbname=dapr_test"
