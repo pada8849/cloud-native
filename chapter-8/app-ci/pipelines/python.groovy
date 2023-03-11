@@ -75,7 +75,7 @@ spec:
                     script {
                         dir("${cidir}") {
                             sh "pip config set global.cache-dir \"/tmp/.cache/pip\" && pip install -r requirements.txt "
-
+                            sh "cp -ar /usr/local/lib/python3.9/site-packages /tmp/.cache/pip"
                         }
                     }
                 }
@@ -83,6 +83,7 @@ spec:
             stage('构建运行镜像') {
                 container('kaniko') {
                     dir("${cidir}") {
+                        sh "cp -ar /tmp/.cache/pip ."
                         sh "executor -f Dockerfile -c . -d ${imageurl}"
                     }
                 }
