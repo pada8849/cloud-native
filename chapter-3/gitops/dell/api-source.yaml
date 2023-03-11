@@ -8,5 +8,5 @@ spec:
   interval: 30s
   ref:
     branch: master
-  url: https://gitee.com/pada8849/cloud-native.git
+  url: https://github.com/pada8849/cloud-native.git
 

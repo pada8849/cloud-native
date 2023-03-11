@@ -1,14 +1,13 @@
 
 
-FROM python:3.9-slim-buster
+FROM 192.168.1.88:5000/python39-build
 
 WORKDIR /app
 
 COPY requirements.txt ./
-RUN pip config set global.cache-dir "/tmp/.cache/pip"
-RUN --mount=type=cache,target=/tmp/.cache/pip pip install --upgrade pip && \
-    --mount=type=cache,target=/tmp/.cache/pip pip install -r requirements.txt
+
+RUN pip install --no-index --find-links=/tmp/.cache/pip/package -r requirements.txt
 
 COPY . .
 
-CMD ["python", "app.py"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]

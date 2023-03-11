@@ -20,7 +20,7 @@ spec:
     spec:
       initContainers:
         - name: init-mysql
-          image: 10.0.1.104:5000/sql-update:new
+          image: 192.168.1.88:5000/mysql_update:latest
       containers:
       - env:
         - name: DB_HOST
@@ -37,7 +37,7 @@ spec:
           value: jsh-redis
         - name: REDIS_PORT
           value: "6379"
-        image: 10.0.1.125:5000/library/kaniko:99e6656
+        image: 192.168.1.88:5000/library/jsh-api:60afe81
         imagePullPolicy: ""
         name: jsh-api
         volumeMounts:

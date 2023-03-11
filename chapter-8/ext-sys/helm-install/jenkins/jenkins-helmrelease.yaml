@@ -15,6 +15,13 @@ spec:
         name: jenkins
         namespace: ops-system
       interval: 1m
+  values:
+    controller:
+      ingress:
+        enabled: true
+        paths: []
+        apiVersion: "networking.k8s.io/v1"
+        hostName: j.com
   upgrade:
     remediation:
       remediateLastFailure: true
