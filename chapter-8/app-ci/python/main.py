@@ -17,13 +17,13 @@ def read_item(item_id: int, q: str = None):
 @app.get("/state/{key}")
 async def read_state(key: str):
     with DaprClient() as d:
-        value = await d.get_state("statestore", key)
+        value = d.get_state("statestore", key)
     return {"key": key, "value": value}
 
-@app.put("/state/{key}")
-async def write_state(key: str, value: str):
+@app.put("/state/{key}/{value}")
+async def write_state(key: str = "a", value: str = 'a'):
     with DaprClient() as d:
-        await d.save_state("statestore", key, value)
+        d.save_state("statestore", key, value)
     return {"key": key, "value": value}
 
 @app.post("/user")

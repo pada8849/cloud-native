@@ -3,41 +3,20 @@ kind: Configuration
 metadata:
   name: pubsubconfig
 spec:
-  pubsub:
-    - name: pubsub
-      pubsubType: rabbitmq
-      metadata:
-        - name: host
-          value: rabbitmqsrv
-        - name: port
-          value: "5672"
-        - name: user
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq
-              key: user
-        - name: password
-          valueFrom:
-            secretKeyRef:
-              name: rabbitmq
-              key: password
   stateStore:
     - name: postgres
       stateStoreType: postgresql
       metadata:
         - name: host
-          value: postgresqlsrv
+          value: postgresql.ops-system.svc.cluster.local
         - name: port
           value: "5432"
         - name: database
           value: mydatabase
         - name: user
-          valueFrom:
-            secretKeyRef:
-              name: postgresql
-              key: user
+          value: "postgres"
         - name: password
           valueFrom:
             secretKeyRef:
               name: postgresql
-              key: password
+              key: postgres-password
