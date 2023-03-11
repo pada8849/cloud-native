@@ -6,8 +6,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN ls && cp -ar site-packages/* /usr/local/lib/python3.9/site-packages && \
-    cp -ar . /tmp/.cache/pip && \
+RUN ls && cp -ar pip/site-packages/* /usr/local/lib/python3.9/site-packages && \
+    cp -ar ./pip/* /tmp/.cache/pip && \
     pip install --no-index --find-links=/tmp/.cache/pip -r requirements.txt
 
 
