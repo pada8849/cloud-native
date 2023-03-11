@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
-RUN pip install --no-index --find-links=/tmp/.cache/pip/package -r requirements.txt
+RUN pip install --no-index --find-links=/tmp/.cache/pip -r requirements.txt
 
 COPY . .
 
