@@ -24,8 +24,3 @@
     kubectl run label-busybox --rm -ti --labels="access=true" --image=busybox:1.28 -- /bin/sh
     wget --spider --timeout=1 jsh-web #查看不同结果
     
-### dapr 具体操作
-    #添加 dapr helm 
-    #添加deploy yaml 的 dapr 注入 
-    #设置 componet
-    #操作状态验证

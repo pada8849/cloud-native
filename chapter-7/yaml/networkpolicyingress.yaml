@@ -12,3 +12,9 @@ spec:
         - podSelector:
             matchLabels:
               access: "true"
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: "cattle-monitoring-system"
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: "kube-system"

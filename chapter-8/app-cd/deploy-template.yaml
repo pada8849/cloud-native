@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {PROJECT}
+    version: v1
+  name: {PROJECT}
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {PROJECT}
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: {PROJECT}
+        version: v1
+      annotations:
+        dapr.io/enabled: true
+        dapr.io/app-id: {PROJECT}
+        dapr.io/app-port: {PORT}
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - {PROJECT}
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - env:
+        - name: DB_HOST
+          value: jsh-mysql
+        image: {CODE}
+        name: {PROJECT}
+        ports:
+        - containerPort: {PORT}
+        livenessProbe:
+          tcpSocket:
+            port: {PORT}
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          tcpSocket:
+            port: {PORT}
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 1500m
+            memory: 1000Mi
+          requests:
+            cpu: 300m
+            memory: 500Mi
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {PROJECT}
+  name: {PROJECT}
+  namespace: default
+spec:
+  ports:
+    - name: http
+      port: {PORT}
+      targetPort: {PORT}
+  selector:
+    app: {PROJECT}
